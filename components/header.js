@@ -6,41 +6,49 @@ import React from "react";
 //class Header extends Component {
  
 //  export default ({ pathname })  => (
+// background-image: url('../static/orataiphathai_bg1.jpg');
 const Header = () => (
-  <header className='header'>
-   {/*  <Link href='/'>
-      <a className={pathname === '/' && 'is-active'}>Home</a>
-    </Link>
-    <Link href='/about'>
-      <a className={pathname === '/about'  && 'is-active'}>About</a>
-    </Link>
-    <Link href='/products'>
-      <a className={pathname === '/products'  && 'is-active'}>Products</a>
-    </Link>  
-    <Link href='/contactus'>
-      <a className={pathname === '/contactus'  && 'is-active'}>Contact Us</a>
-    </Link> 
-    |   
-    <Link href='/signup'>
-      <a className={pathname === '/signup'  && 'is-active'}>Sign Up</a>
-    </Link> 
-    <Link href='/login'>
-      =<a className={pathname === '/login'  && 'is-active'}>Login</a>
-    </Link> 
-    <Link href='/logout'>
-      <a className={pathname === '/logout'  && 'is-active'}>Log Out</a>
-    </Link> 
-   */}
-  
-  
+  <header >
+  <div className='header'>
+    <img src='../static/orataiphathai_bg1.jpg' width='1600' height='270' className='img-responsive myimg' />
+  </div>
    <style jsx>{`
-  header {
-    display: inline-block;
-    width: 100%;
-    max-width: 1000px;
-    background-image: url(../static/orataiphathai_bg.jpg)
-    
+  @media (min-width: 601px) {
+    header {
+      display: inline-block;
+        width: 100%;
+        height: 100%;
+        min-height: 100px;
+        max-width: 1600px;
+      margin: 0px;
+        padding: 0px;
+        background-color: blue;
+    }
+    .header {
+        display: inline-block;
+        width: 100%;
+        height: 100%;
+        min-height: 100px;
+        max-width: 1600px;
+        background-color: blue;
+        margin: 0px;
+        padding: 0px;
+      }
   }
+  @media (max-width: 600px) {
+    .myimg{
+      width: auto!important;
+      height: 100px!important;
+    }
+    .header {
+      display: inline-block;
+      width: 100%;
+      height: 100%;
+      max-width: 1600px;
+      background-color: blue;
+    }
+  }
+ 
   a {
     display: inline-block;
     margin: 10px;

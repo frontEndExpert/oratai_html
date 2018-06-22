@@ -5,10 +5,10 @@ export default ({ pathname }) => (
   <footer>
     <span >Copyrights Orathaiphathai 2018</span>
     <Link href='/privacy'>
-      <a className={pathname === '/privacy' ? 'is-active' : ''}>Privacy Policy</a>
+      <a>Privacy Policy</a>
     </Link>
     <Link href='/mcookies'>
-      <a className={pathname === '/mcookies' ? 'is-active' : ''}>Manage cookies</a>
+      <a  >Manage cookies</a>
     </Link>  
   </footer>
 )
