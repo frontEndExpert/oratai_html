@@ -6,11 +6,12 @@ const initialState = {
     products: []
 };
 
-// const productInit = ( state, action ) => {
-//     return updateObject( state, { purchased: false } );
-// };
+const productInit = ( state, action ) => {
+    return updateObject( state, { purchased: false } );
+};
 
 const addProductStart = ( state, action ) => {
+    console.log('action products: ', products);
     return updateObject( state, { loading: true } );
 };
 
@@ -45,9 +46,9 @@ const fetchProductsFail = ( state, action ) => {
 const reducer = ( state = initialState, action ) => {
     switch ( action.type ) {
         case actionTypes.PRODUCTS_INIT: return productsInit( state, action );
-        case actionTypes.ADD_PRODUCT_START: return addProductsStart( state, action );
-        case actionTypes.ADD_PRODUCT_SUCCESS: return addProductsSuccess( state, action )
-        case actionTypes.ADD_PRODUCT_FAIL: return addProductsFail( state, action );
+        case actionTypes.ADD_PRODUCT_START: return addProductStart( state, action );
+        case actionTypes.ADD_PRODUCT_SUCCESS: return addProductSuccess( state, action )
+        case actionTypes.ADD_PRODUCT_FAIL: return addProductFail( state, action );
         case actionTypes.FETCH_PRODUCTS_START: return fetchProductsStart( state, action );
         case actionTypes.FETCH_PRODUCTS_SUCCESS: return fetchProductsSuccess( state, action );
         case actionTypes.FETCH_PRODUCTS_FAIL: return fetchProductsFail( state, action );

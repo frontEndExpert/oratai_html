@@ -108,7 +108,7 @@ class Auth extends Component {
 
         let authRedirect = null;
         if ( this.props.isAuthenticated ) {
-            Router.push('/products');
+            Router.push('/admin');
             //authRedirect = <Redirect to={this.props.authRedirectPath} /> 
         }
 

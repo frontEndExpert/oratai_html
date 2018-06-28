@@ -13,22 +13,24 @@ class Products extends Component {
         this.props.onFetchProducts();
         console.log('products=', this.props.products);
         console.log('loading=', this.props.loading);
-       
     }
 
     render () {
         let products = <Spinner />;
         if ( !this.props.loading ) {
+            //console.log('loading=', this.props.loading);
+           // console.log('this.props.products=', JSON.stringify(this.props.products));
             products = this.props.products.map( product => (
                 <div className='card'>
-                    <img src={product.photo} width='200px' height='120px'/>
-                    <span >{product.product_name}</span>
-                    <span >{product.retail_price}</span>
-                    <span >{product.description}</span>
-                    <span >{product.color}</span>
-                    <span >{product.pattern}</span>
+                    <img src={product.productData.photo} width='200px' height='120px'/>
+                    <span >{product.productData.id}</span>
+                    <span >{product.productData.product_name}</span>
+                    <span >{product.productData.retail_price}</span>
+                    <span >{product.productData.description}</span>
+                    <span >{product.productData.color}</span>
+                    <span >{product.productData.pattern}</span>
                 </div>
-            ) );
+            ) ); 
         }
         return (
             <div>
@@ -38,7 +40,6 @@ class Products extends Component {
     }
 }
 
-// 
 
 const mapStateToProps = state => {
     return {

@@ -10,6 +10,7 @@ import * as actions from '../store/actions/index';
 import { updateObject, checkValidity } from '../shared/utility';
 
 class AddProductForm extends Component {
+    
     state = {
         productForm: {
             product_name: {
@@ -67,12 +68,17 @@ class AddProductForm extends Component {
                 touched: false
             }
         },
-        formIsValid: false
-    }
+        formIsValid: false,
+        productData: {}
+    };
+
+    // submit(values, dispatch) {
+    //     return dispatch(submitFormValues(values));
+    // }
 
     productHandler = ( event ) => {
         event.preventDefault();
-        console.log('product submit handler');
+        
         const formData = {};
         for (let formElementIdentifier in this.state.productForm) {
             formData[formElementIdentifier] = this.state.productForm[formElementIdentifier].value;
@@ -80,11 +86,14 @@ class AddProductForm extends Component {
         const product = {
             productData: formData
         }
-
-        this.props.onAddProduct(product);
+        this.setState({productData: formData});
+        //this.props.onAddProductStart();
+        this.props.onAddProduct(product); 
+       //{ProductData: formData}
         
-    }
+    };
 
+   
     inputChangedHandler = (event, inputIdentifier) => {
         console.log('product change handler');
         const updatedFormElement = updateObject(this.state.productForm[inputIdentifier], {
@@ -101,7 +110,7 @@ class AddProductForm extends Component {
             formIsValid = updatedProductForm[inputIdentifier].valid && formIsValid;
         }
         this.setState({productForm: updatedProductForm, formIsValid: formIsValid});
-    }
+    };
 
     render () {
         const formElementsArray = [];
@@ -111,6 +120,7 @@ class AddProductForm extends Component {
                 config: this.state.productForm[key]
             });
         }
+
         let form = (
             <form onSubmit={this.productHandler}>
                 {formElementsArray.map(formElement => (
@@ -124,7 +134,8 @@ class AddProductForm extends Component {
                         touched={formElement.config.touched}
                         changed={(event) => this.inputChangedHandler(event, formElement.id)} />
                 ))}
-                <Button btnType="Success"  onClick={this.onSubmit} disabled={!this.state.formIsValid}>Add This Product</Button>
+                <Button type='submit' btnType='Success' 
+                disabled={!this.state.formIsValid}>Add This Product</Button>
             </form>
         );
         if ( this.props.loading ) {
@@ -160,16 +171,17 @@ class AddProductForm extends Component {
 // 
 const mapStateToProps = state => {
     return {
-        productData: state.productForm,
+        productData: state.productData,
         formIsValid: state.formIsValid,
         token: state.auth.token,
         userId: state.auth.userId
     }
 };
-
+// product, this.props.token
 const mapDispatchToProps = dispatch => {
     return {
-        onAddProduct: (productData) => dispatch(actions.addProduct(productData, token))
+        onAddProduct: (newProduct) => dispatch(actions.addProduct(newProduct)),
+        onAddProductStart: () => dispatch(actions.addProductStart())
     };
 };
 

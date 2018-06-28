@@ -17,8 +17,13 @@ const rootReducer = combineReducers({
 // ));
 
 const exampleInitialState = {
-    products: [],
+    products: {
+    products: {},
     loading: false
+},
+auth: {userId: 0,
+        token: null,
+    loading: false}
 };
 
 

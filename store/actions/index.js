@@ -1,5 +1,6 @@
 export {
     addProduct,
+    addProductStart,
     fetchProducts
 } from './products';
 export {
