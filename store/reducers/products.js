@@ -3,7 +3,8 @@ import { updateObject } from '../../shared/utility';
 
 const initialState = {
     loading: false,
-    products: []
+    products: [],
+    product: []
 };
 
 const productInit = ( state, action ) => {
@@ -11,15 +12,17 @@ const productInit = ( state, action ) => {
 };
 
 const addProductStart = ( state, action ) => {
-    console.log('action products: ', products);
-    return updateObject( state, { loading: true } );
+    //console.log('action products: ', products);
+    return updateObject( state, { productAdded: false, loading: true } );
 };
 
 const addProductSuccess = ( state, action ) => {
-    const newProduct = updateObject( action.productData, { id: action.productId } );
+    const newProduct = updateObject( action.products, { id: action.productId } );
+    console.log('action state.products: ', state.products);
     return updateObject( state, {
+        productAdded: true,
         loading: false,
-        products: state.products.concat( newProduct )
+        product: state.product.concat( newProduct )
     } );
 };
 

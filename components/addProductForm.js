@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-
+import { Redirect } from 'react-router-dom';
 import Button from './UI/Button/Button';
 import Spinner from './UI/spinner/spinner';
 import axios from '../axios-firebase';
@@ -141,8 +141,14 @@ class AddProductForm extends Component {
         if ( this.props.loading ) {
             form = <Spinner />;
         }
+
+        let authRedirect = null;
+        if ( this.props.productAdded ) {
+            authRedirect = <Redirect to={'/products'} />
+        }
         return (
             <div className='ProductData'>
+                {authRedirect}
                 <h4>Add Product Here</h4>
                 {form}
             <style jsx>{`
