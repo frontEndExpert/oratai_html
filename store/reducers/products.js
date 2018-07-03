@@ -17,12 +17,11 @@ const addProductStart = ( state, action ) => {
 };
 
 const addProductSuccess = ( state, action ) => {
-    const newProduct = updateObject( action.products, { id: action.productId } );
-    console.log('action state.products: ', state.products);
+    //const newProduct = updateObject( action.products, { id: action.productId } );
+    console.log('add product success: ');
     return updateObject( state, {
         productAdded: true,
-        loading: false,
-        product: state.product.concat( newProduct )
+        loading: false
     } );
 };
 

@@ -4,6 +4,9 @@ export {
     fetchProducts
 } from './products';
 export {
+    authOpen,
+    authClose,
+    authLogout,
     auth,
     logout,
     setAuthRedirectPath,

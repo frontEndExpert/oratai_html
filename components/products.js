@@ -15,13 +15,14 @@ class Products extends Component {
         allProductsArr: [] 
     }
    
-    handleClick(event) {
+    handleClick = (event) => {
         this.setState({
           currentPage: Number(event.target.id)
         });
       }
 
     componentWillReceiveProps(nextProps){
+        console.log('componentWillReceiveProps')
         if(this.props.products !== nextProps.products){
             this.setState({allProductsArr: nextProps.products})
         }
@@ -32,8 +33,7 @@ class Products extends Component {
         if (this.props.products.length <= 1) {
             this.setState({allProductsArr: nextProps.products})
         }
-        console.log('products2WillMount=', this.props.products);
-        console.log('this.state.allProductsArr=', this.state.allProductsArr);
+        console.log('productsWillMount=', this.props.products,this.state.allProductsArr);
     }
 
     // async componentDidMount() {
@@ -54,16 +54,16 @@ class Products extends Component {
             const currentProducts = this.state.allProductsArr.slice(indexOfFirstProduct, indexOfLastProduct);
             products = currentProducts.map((product, index) => (
              <div key={index}  className="card">
-                <div className="media-left">
+                <div className="product-img">
                   <img src="../static/sarong1.png" 
                         className="media-object prd-img" />
                 </div>
-                <div className="media-body">
-                  <h4 className="media-heading">{product.productData.product_name}</h4>
-                  <p>Description: {product.productData.description}</p>
-                  <p>Color: {product.productData.color}</p>
-                  <p>Pattern: {product.productData.pattern}</p>
-                  <p>Price: {product.productData.retail_price}</p>
+                <div className="product-info">
+                  <h1 className="product-heading">{product.productData.product_name}</h1>
+                  <span>Description: {product.productData.description}</span><br/>
+                  <span>Color: {product.productData.color}</span><br/>
+                  <span>Pattern: {product.productData.pattern}</span><br/>
+                  <span className="product-price">Price: {product.productData.retail_price}</span>
                 </div>
               </div>
           ));
@@ -76,10 +76,10 @@ class Products extends Component {
 
         renderPageNumbers = pageNumbers.map(number => {
           return (
-            <li className="page-item page-btn"  key={number}  id={number}
-                onClick={this.handleClick}>
+            <li className="mypage-item"  key={number} id={number} 
+                ><span className="page-btn" onClick={this.handleClick} id={number}>
             {number}
-            </li>
+            </span></li>
           );
         });
         }
@@ -88,16 +88,31 @@ class Products extends Component {
             <div className="cards">
                 {products}
             </div>
-            <div> 
-            <nav aria-label="...">
-                <ul className="pagination pagination-lg">   
-                {renderPageNumbers}
-                </ul>
-            </nav>
+            <div className="my-pager"> 
+                <nav aria-label="...">
+                    <ul className="pagination pagination-lg">   
+                    {renderPageNumbers}
+                    </ul>
+                </nav>
             </div>
         <style jsx global>{`
+        h1{
+            font-weight: bold;
+            font-size: 1.5em;
+        }
+        .product-price{
+            font-weight: bold;
+            font-size: 1.5em;
+        }
+        .product-img{
+            width: 100%;
+            padding: 2px;
+        }
+            div.my-pager{
+                text-align: center;
+            }
             img.prd-img {
-                width:60px!important;
+                width:26vw!important;
             }
             .cards{
                 display: flex;
@@ -107,24 +122,35 @@ class Products extends Component {
             }
             .card{
                 width: 30%;
+                border: 1px solid brown;
+                border-radius: 20px;
+                margin: 10px;
+                padding:15px;
+                background-color: beige;
             }
-            .pagination>li.page-btn{
+            .pagination>li.mypage-item{
                 position: relative!important;
                 display: inline-block!important;
                 width:50px;
                 height: 50px;
-                padding: 6px 12px!important;
+                padding: 0px 0px!important;
                 margin-left: -1px!important;
+                background-color: white!important;
+                border: 1px solid #ddd!important;
+            }
+            .pagination>li>span.page-btn{
+                width:49px;
+                height: 49px;
+                padding: 6px 9px!important;
                 line-height: 1.42857143!important;
                 color: #337ab7!important;
                 font-size: 24px!important;
                 text-decoration: none!important;
-                background-color: white!important;
-                border: 1px solid #ddd!important;
             }
-            .pagination>li.page-btn:hover{
+            .pagination>li>span.page-btn:hover{
                 background-color: lightgrey!important;
                 color: red!important;
+                cursor: pointer;
             }
         `}</style>
         </div>

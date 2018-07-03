@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Redirect } from 'react-router-dom';
 import Router from 'next/router';
 
 import Input from '../components/UI/Input/Input';

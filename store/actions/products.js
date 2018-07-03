@@ -14,7 +14,9 @@ export const addProductFail = ( error ) => {
 export const addProductStart = () => {
     return {
         type: actionTypes.ADD_PRODUCT_START,
-        products: []
+        product: [],
+        productAdded: false,
+        productId: 0
     };
 };
 
@@ -22,7 +24,8 @@ export const addProductSuccess = ( id, productData ) => {
     return {
         type: actionTypes.ADD_PRODUCT_SUCCESS,
         productId: id,
-        product: productData
+        product: productData,
+        productAdded: true
     };
 };
 //productData, token
@@ -32,7 +35,7 @@ export const addProduct = ( productData ) => {
         // ?auth=' + token + token,  rest/saving-data/products.json
          axios.post( '/products.json', productData )
             .then( response => {
-                console.log('productData', productData);
+              //  console.log('productData', productData);
                 dispatch( addProductSuccess( response.data.name, productData  ) );
             } )
             .catch( error => {

@@ -2,6 +2,20 @@ import axios from 'axios';
 
 import * as actionTypes from './actionTypes';
 
+export const authOpen = () => {
+    return {
+        type: actionTypes.AUTH_OPEN,
+        authShow: true
+    };
+};
+
+export const authClose = () => {
+    return {
+        type: actionTypes.AUTH_CLOSE,
+        authShow: false
+    };
+};
+
 export const authStart = () => {
     return {
         type: actionTypes.AUTH_START
@@ -26,11 +40,12 @@ export const authFail = (error) => {
     };
 };
 
-export const logout = () => {
+export const authLogout = () => {
     localStorage.removeItem('token');
     localStorage.removeItem('expirationDate');
     localStorage.removeItem('userId');
     localStorage.removeItem('isAdmin');
+
     return {
         type: actionTypes.AUTH_LOGOUT
     };
@@ -39,7 +54,7 @@ export const logout = () => {
 export const checkAuthTimeout = (expirationTime) => {
     return dispatch => {
         setTimeout(() => {
-            dispatch(logout());
+            dispatch(authLogout());
         }, expirationTime * 1000);
     };
 };
@@ -63,6 +78,7 @@ export const auth = (email, password, isSignup) => {
                 localStorage.setItem('expirationDate', expirationDate);
                 localStorage.setItem('userId', response.data.localId);
                 dispatch(authSuccess(response.data.idToken, response.data.localId));
+                dispatch(authClose());
                 dispatch(checkAuthTimeout(response.data.expiresIn));
             })
             .catch(err => {
@@ -116,11 +132,11 @@ export const authCheckState = () => {
     return dispatch => {
         const token = localStorage.getItem('token');
         if (!token) {
-            dispatch(logout());
+            dispatch(authLogout());
         } else {
             const expirationDate = new Date(localStorage.getItem('expirationDate'));
             if (expirationDate <= new Date()) {
-                dispatch(logout());
+                dispatch(authLogout());
             } else {
                 const userId = localStorage.getItem('userId');
                 dispatch(authSuccess(token, userId));

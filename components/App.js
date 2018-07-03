@@ -3,53 +3,46 @@ import Head from './head';
 import Header from './header';
 import Nav from './nav';
 import Footer from './footer';
+import Modal from './UI/Modal/Modal';
+import Auth from '../containers/Auth/Auth'
+import { connect } from 'react-redux';
 
-//import { Route, Switch, withRouter, Redirect } from 'react-router-dom';
-// import { connect } from 'react-redux';
-// import asyncComponent from '../hoc/asyncComponent/asyncComponent';
-// import Logout from '../containers/Auth/Logout/Logout';
-// import * as actions from '../store/actions/index';
+class App extends Component {
 
-// const asyncProducts = asyncComponent(() => {
-//   return import('./products');
-// });
-
-// const asyncAuth = asyncComponent(() => {
-//   return import('../containers/Auth/Auth');
-// });
-
-// class App extends Component {
-//   componentDidMount () {
-//     this.props.onTryAutoSignup();
-//   }
-
-//  render () {
-const App = ({ children }) => (
-//  return (  isAuthenticated='true' isAdmin='true'
+//const App = ({ children }) => (
+  render() {
+  return (
   <main>
     <Head title="Home OraTaiPhaThai" />
     <Header />
     <Nav  />
-    {children}
+    <Modal authShow={this.props.authShow}>
+      <Auth />
+    </Modal>
+    <div className="mainbody">
+    {this.props.children}
+    </div>
     <Footer />
+    <style jsx global>{`
+    .mainbody{
+      background-color: #2E2E2E;
+    }
+    `}</style>
   </main>
 );
+  }
+}
 
-export default App
-/*
 const mapStateToProps = state => {
   return {
-    isAuthenticated: state.auth.token !== null
+      loading: state.auth.loading,
+      error: state.auth.error,
+      isAuthenticated: state.auth.token !== null,
+      authRedirectPath: state.auth.authRedirectPath,
+      isAdmin: true,
+      authShow: state.auth.authShow
   };
 };
 
-const mapDispatchToProps = dispatch => {
-  return {
-    onTryAutoSignup: () => dispatch( actions.authCheckState() )
-  };
-};
-
-//export default withRouter( connect( mapStateToProps, mapDispatchToProps )( App ) );
-export default connect( mapStateToProps, mapDispatchToProps )( App );
-
-*/
+export default connect( mapStateToProps )( App );
+// export default App

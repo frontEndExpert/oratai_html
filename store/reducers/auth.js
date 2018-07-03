@@ -6,7 +6,15 @@ const initialState = {
     userId: null,
     error: null,
     loading: false,
-    authRedirectPath: '/'
+    authRedirectPath: '/',
+    authShow: false
+};
+
+const authOpen = ( state, action ) => {
+    return updateObject( state, { authShow: true } );
+};
+const authClose = ( state, action ) => {
+    return updateObject( state, { authShow: false } );
 };
 
 const authStart = ( state, action ) => {
@@ -39,6 +47,8 @@ const setAuthRedirectPath = (state, action) => {
 
 const reducer = ( state = initialState, action ) => {
     switch ( action.type ) {
+        case actionTypes.AUTH_OPEN: return authOpen(state, action);
+        case actionTypes.AUTH_CLOSE: return authClose(state, action);
         case actionTypes.AUTH_START: return authStart(state, action);
         case actionTypes.AUTH_SUCCESS: return authSuccess(state, action);
         case actionTypes.AUTH_FAIL: return authFail(state, action);

@@ -2,26 +2,48 @@ import React, { Component } from 'react';
 
 import Auxiliry from '../../../hoc/Auxiliry/Auxiliry';
 import Backdrop from '../Backdrop/Backdrop';
-
+import Button from '../Button/Button'
+import { connect } from 'react-redux';
+import * as actions from '../../../store/actions/index';
 class Modal extends Component {
 
     shouldComponentUpdate ( nextProps, nextState ) {
-        return nextProps.show !== this.props.show || nextProps.children !== this.props.children;
+        return nextProps.authShow !== this.props.authShow || nextProps.children !== this.props.children;
     }
+    // authShow={this.props.authShow} clicked={this.props.modalClosed}
     
     render () {
+        let backdropdiv = null;
+ if (this.props.authShow) {
+    backdropdiv = <div className="backdrop" onClick={this.props.authClose}></div>;
+ } else { backdropdiv = null; }
+
+        console.log('Modal this.props.authShow',this.props.authShow);
         return (
             <Auxiliry>
-                <Backdrop show={this.props.show} clicked={this.props.modalClosed} />
-                <div
-                    className='Modal' 
+                <div className="backdrop" onClick={this.props.onAuthClose}
+                style={{
+                    display: this.props.authShow ? 'block' : 'none'
+                }}>
+                ></div>
+                <div className='Modal' 
                     style={{
-                        transform: this.props.show ? 'translateY(0)' : 'translateY(-100vh)',
-                        opacity: this.props.show ? '1' : '0'
+                        transform: this.props.authShow ? 'translateY(0)' : 'translateY(-100vh)',
+                        opacity: this.props.authShow ? '1' : '0'
                     }}>
+                    <button className="btn btn-link" onClick={this.props.onAuthClose}>X</button>
                     {this.props.children}
                 </div>
                 <style jsx>{`
+                .backdrop {
+                    width: 100%;
+                    height: 100%;
+                    position: fixed;
+                    z-index: 100;
+                    left: 0;
+                    top: 0;
+                    background-color: rgba(0, 0, 0, 0.5);
+                }
                 .Modal {
                     position: fixed;
                     z-index: 500;
@@ -38,7 +60,8 @@ class Modal extends Component {
                 
                 @media (min-width: 600px) {
                     .Modal {
-                        width: 500px;
+                        width: 320px;
+                        height: 270px;
                         left: calc(50% - 250px);
                     }
                 }
@@ -48,4 +71,18 @@ class Modal extends Component {
     }
 }
 
-export default Modal;
+const mapStateToProps = state => {
+    return {
+        authShow: state.auth.authShow
+    };
+  };
+
+const mapDispatchToProps = dispatch => {
+    return {
+        onAuthClose: () =>  dispatch( actions.authClose() )
+    };
+};
+
+export default connect( mapStateToProps, mapDispatchToProps )(Modal);
+
+// export default Modal;

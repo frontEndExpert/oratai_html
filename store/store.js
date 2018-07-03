@@ -21,9 +21,10 @@ const exampleInitialState = {
     products: {},
     loading: false
 },
-auth: {userId: 0,
+auth: { userId: 0,
         token: null,
-    loading: false}
+        loading: false,
+        authShow: false}
 };
 
 

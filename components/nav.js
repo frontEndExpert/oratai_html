@@ -3,36 +3,16 @@ import Link from 'next/link';
 import Router from 'next/router';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
+import * as actions from '../store/actions/index';
 
-class Nav extends React.Component {
+class Nav extends Component {
 
   static getInitialProps ({ context }) {
     console.log('req' + context.pathname);
-
     return { pathname: context.pathname  };  
   }
 
-  // static childContextTypes = {
-  //   pathname: PropTypes.string
-  // }  
-
-  // getChildContext() {
-  //   return { pathname: this.props.pathname };
-  // }  
-
-  //export default ({ pathname })  => (
-  //<nav className='header'>
-//  export class Nav extends Component {
-//    static getInitialProps(context) {
-//			Router.push('/');
-      // const promise = new Promise((resolve, reject) => {
-      //   setTimeout(() => {
-      //     resolve({ appName: "Super App" });
-      //   }, 1000);
-      // });
-      // return promise;
-  //  }
-  
+ 
   render() {
     console.log('isAuthenticated', this.props.isAuthenticated);
     console.log('isAdmin', this.props.isAdmin);
@@ -40,38 +20,34 @@ class Nav extends React.Component {
     
     if ( this.props.isAuthenticated && this.props.isAdmin ) {
       authlinks = (
-        <ul className="nav navbar-nav navbar-right">
-        <li>
+        <>
+        <li key="admin">
             <Link href='/admin'>
               <a > <span className="glyphicon glyphicon-log-out"></span> Admin</a>
             </Link> 
           </li>
-          <li>
+          <li key="logout">
             <Link href='/logout'>
               <a > <span className="glyphicon glyphicon-log-out"></span> Log Out</a>
             </Link> 
           </li>
-        </ul>
+          </>
       );
     }else if ( this.props.isAuthenticated ){
       authlinks = (
-        <ul className="nav navbar-nav navbar-right">
-          <li>
-            <Link href='/logout'>
-              <a > <span className="glyphicon glyphicon-log-out"></span> Log Out</a>
-            </Link> 
+          <li key="logout">
+            <button className="btn btn-link" onClick={this.props.onLogOut} >
+              <a ><span className="glyphicon glyphicon-user"></span> Log Out</a>
+            </button>
           </li>
-        </ul>
       );
     } else {
       authlinks = (
-        <ul className="nav navbar-nav navbar-right">
-          <li>   
-             <Link href='/auth'>
+          <li key="login">   
+             <button className="btn btn-link" onClick={this.props.onAuthOpen} >
               <a ><span className="glyphicon glyphicon-user"></span> Login</a>
-            </Link> 
+            </button> 
           </li>
-        </ul>
       );
     }
 
@@ -106,10 +82,12 @@ class Nav extends React.Component {
           </Link> 
           </li>
       </ul>
+      <ul className="nav navbar-nav navbar-right">
         {authlinks}
+      </ul>
     </div>
 
-    <style jsx>{`
+    <style jsx global>{`
       :global(body) {
         margin: 0;
         font-family: -apple-system,BlinkMacSystemFont,Avenir Next,Avenir,Helvetica,sans-serif;
@@ -157,9 +135,18 @@ const mapStateToProps = state => {
       error: state.auth.error,
       isAuthenticated: state.auth.token !== null,
       authRedirectPath: state.auth.authRedirectPath,
-      isAdmin: true 
+      isAdmin: true,
+      authShow: state.auth.authShow
   };
 };
 
-export default connect( mapStateToProps )( Nav );
+const mapDispatchToProps = dispatch => {
+  return {
+      onAuthClose: () => dispatch (actions.authClose()),
+      onAuthOpen: () => dispatch (actions.authOpen()),
+      onLogOut: () => dispatch (actions.authLogout())
+  };
+};
+
+export default connect( mapStateToProps, mapDispatchToProps)( Nav );
 // export default Nav;

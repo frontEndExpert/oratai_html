@@ -15,6 +15,8 @@ export const FETCH_PRODUCTS_SUCCESS = 'FETCH_PRODUCTS_SUCCESS';
 export const FETCH_PRODUCTS_FAIL = 'FETCH_PRODUCTS_FAIL';
 export const FETCH_PRODUCTS = 'FETCH_PRODUCTS';
 
+export const AUTH_OPEN = 'AUTH_OPEN';
+export const AUTH_CLOSE = 'AUTH_CLOSE';
 export const AUTH_START = 'AUTH_START';
 export const AUTH_SUCCESS = 'AUTH_SUCCESS';
 export const AUTH_FAIL = 'AUTH_FAIL';

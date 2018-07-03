@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Redirect } from 'react-router-dom';
+import Router from 'next/router'
 import Button from './UI/Button/Button';
 import Spinner from './UI/spinner/spinner';
 import axios from '../axios-firebase';
@@ -69,12 +70,21 @@ class AddProductForm extends Component {
             }
         },
         formIsValid: false,
-        productData: {}
+        productData: {},
+        productAdded: false,
+        productId: 0
     };
 
-    // submit(values, dispatch) {
-    //     return dispatch(submitFormValues(values));
-    // }
+    componentWillReceiveProps = (nextProps) => {
+        console.log('componentWillReceiveProps')
+        if(this.props.productAdded !== nextProps.productAdded){
+            this.setState({productAdded: nextProps.productAdded})
+        }
+       // if(nextProps.productAdded) {Router.push('/products');}
+        console.log('componentWillReceiveProps', this.state.productAdded)
+    }
+
+    //componentWillUpdate 
 
     productHandler = ( event ) => {
         event.preventDefault();
@@ -87,9 +97,7 @@ class AddProductForm extends Component {
             productData: formData
         }
         this.setState({productData: formData});
-        //this.props.onAddProductStart();
         this.props.onAddProduct(product); 
-       //{ProductData: formData}
         
     };
 
@@ -142,13 +150,11 @@ class AddProductForm extends Component {
             form = <Spinner />;
         }
 
-        let authRedirect = null;
         if ( this.props.productAdded ) {
-            authRedirect = <Redirect to={'/products'} />
-        }
+            Router.push('/products');
+        } else { console.log('NOT redirect'); }
         return (
             <div className='ProductData'>
-                {authRedirect}
                 <h4>Add Product Here</h4>
                 {form}
             <style jsx>{`
@@ -177,7 +183,9 @@ class AddProductForm extends Component {
 // 
 const mapStateToProps = state => {
     return {
-        productData: state.productData,
+        productAdded: state.products.productAdded,
+        product: state.productData,
+        productId: state.productId,
         formIsValid: state.formIsValid,
         token: state.auth.token,
         userId: state.auth.userId
