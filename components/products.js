@@ -1,18 +1,19 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
-// import Product from '../../components/Product/Product';
 import axios from '../axios-firebase';
 import withErrorHandler from '../hoc/withErrorHandler/withErrorHandler';
 import * as actions from '../store/actions/index';
 import Spinner from './UI/spinner/spinner';
+import EditProductForm from './EditProductForm';
+import Modal from './UI/Modal/Modal';
 
 class Products extends Component {
-    // , this.props.userId
     state = {
         currentPage: 1, 
         productsPerPage: 6,
-        allProductsArr: [] 
+        allProductsArr: [],
+        editShow: false
     }
    
     handleClick = (event) => {
@@ -21,10 +22,24 @@ class Products extends Component {
         });
       }
 
+    handleDelete = (event) => {
+        //console.log('id: ',event.target.id);
+        this.props.onDeleteProduct(event.target.id);
+      }
+    handleEdit = (event) => {
+        let pid = (event.target.id).slice(1);
+        console.log('edit-pid: ',pid);
+        console.log('props.editShow: ',this.props.editShow);
+        console.log('state.editShow: ',this.state.editShow);
+        //this.props.onEditProduct(event.target.pid);
+        this.props.onEditOpen(pid);
+      }
+
+      
     componentWillReceiveProps(nextProps){
         console.log('componentWillReceiveProps')
         if(this.props.products !== nextProps.products){
-            this.setState({allProductsArr: nextProps.products})
+            this.setState({allProductsArr: nextProps.products, editShow: nextProps.editShow})
         }
     }
 
@@ -42,8 +57,26 @@ class Products extends Component {
     //     console.log('loading=', this.props.loading);
     // }
 
+    
+
     render () {
         let renderPageNumbers = '';
+        let delButton = (p_id) => {
+            if(this.props.isAdmin){
+            return <button className='btn btn-danger' id={p_id}
+                onClick={this.handleDelete} 
+                >Delete This Product</button>;
+            } else { return null}
+        }
+        let editButton = (p_id) => {
+            if(this.props.isAdmin){
+            return <button className='btn btn-danger' id={'p'+p_id}
+                onClick={this.handleEdit} 
+                >Edit This Product</button>;
+            } else { return null}
+        }
+
+
         let products = <Spinner />;
         if ( !this.props.loading ) {
             //console.log('products3=', this.props.products);
@@ -52,6 +85,7 @@ class Products extends Component {
             const indexOfLastProduct = currentPage * productsPerPage;
             const indexOfFirstProduct = indexOfLastProduct - productsPerPage;
             const currentProducts = this.state.allProductsArr.slice(indexOfFirstProduct, indexOfLastProduct);
+            
             products = currentProducts.map((product, index) => (
              <div key={index}  className="card">
                 <div className="product-img">
@@ -63,11 +97,18 @@ class Products extends Component {
                   <span>Description: {product.productData.description}</span><br/>
                   <span>Color: {product.productData.color}</span><br/>
                   <span>Pattern: {product.productData.pattern}</span><br/>
-                  <span className="product-price">Price: {product.productData.retail_price}</span>
+                  <span className="product-price">Price: {product.productData.retail_price}</span><br/>
+                  {delButton(product.id)}
+                  {editButton(product.id)}
                 </div>
               </div>
           ));
     
+          // edit form
+         // let editForm = 
+
+
+
           // Logic for displaying page numbers
         const pageNumbers = [];
         for (let i = 1; i <= Math.ceil(this.props.products.length / productsPerPage); i++) {
@@ -83,8 +124,12 @@ class Products extends Component {
           );
         });
         }
-        return (
-         <div>   
+       
+        return ( 
+         <div> 
+            <Modal id="editForm" editShow={this.props.editShow}>
+                <EditProductForm/>
+            </Modal>  
             <div className="cards">
                 {products}
             </div>
@@ -165,13 +210,17 @@ const mapStateToProps = state => {
         products: state.products.products,
         loading: state.products.loading,
         token: state.auth.token,
-        userId: state.auth.userId
+        userId: state.auth.userId,
+        isAdmin: state.auth.isAdmin,
+        editShow: state.products.editShow
     };
 };
 
 const mapDispatchToProps = dispatch => {
     return {
-        onFetchProducts: () =>  dispatch( actions.fetchProducts() )
+        onFetchProducts: () =>  dispatch( actions.fetchProducts() ),
+        onDeleteProduct: (pId) =>  dispatch( actions.deleteProduct(pId) ),
+        onEditOpen: (pid) => dispatch( actions.editOpen(pid))
     };
 };
 

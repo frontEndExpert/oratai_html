@@ -9,7 +9,7 @@ import withErrorHandler from '../hoc/withErrorHandler/withErrorHandler'
 import * as actions from '../store/actions/index';
 import { updateObject, checkValidity } from '../shared/utility';
 
-class AddProductForm extends Component {
+class EditProductForm extends Component {
     
     state = {
         productForm: {
@@ -106,7 +106,12 @@ class AddProductForm extends Component {
         
     };
 
-   
+    getProductData = (pid) => {
+        axios.get( '/products/pid.json' )
+        .then( res => {
+            console.log(res.data);
+        });
+    }
     inputChangedHandler = (event, inputIdentifier) => {
         console.log('product change handler');
         const updatedFormElement = updateObject(this.state.productForm[inputIdentifier], {
@@ -148,21 +153,18 @@ class AddProductForm extends Component {
                         changed={(event) => this.inputChangedHandler(event, formElement.id)} />
                 ))}
                 <Button type='submit' btnType='Success' 
-                disabled={!this.state.formIsValid}>Add This Product</Button>
+                disabled={!this.state.formIsValid}>Save Changes</Button>
             </form>
         );
         console.log('this.props.isAdmin',this.props.isAdmin);
         if ( this.props.loading ) {
             form = <Spinner />;
         } else if (this.props.token === null) {
-            form = <p key="errMsg">Please Login (Only Admin Can Add Products!)</p>
+            form = <p key="errMsg">Please Login (Only Admin Can Edit Products!)</p>
         } else if (!this.props.isAdmin) {
-            form = <p key="errMsg">Only Admin Can Add Products!</p>
+            form = <p key="errMsg">Only Admin Can Edit Products!</p>
         }
 
-        // if ( this.props.productAdded ) {
-        //     Router.push('/products');
-        // } else { console.log('NOT redirect'); }
         return (
             <div className='ProductData'>
                 <h4>Add Product Here</h4>
@@ -201,7 +203,6 @@ class AddProductForm extends Component {
 // 
 const mapStateToProps = state => {
     return {
-        productAdded: state.products.productAdded,
         product: state.productData,
         productId: state.productId,
         formIsValid: state.formIsValid,
@@ -213,10 +214,11 @@ const mapStateToProps = state => {
 // product, this.props.token
 const mapDispatchToProps = dispatch => {
     return {
-        onAddProduct: (newProduct) => dispatch(actions.addProduct(newProduct)),
-        onAddProductStart: () => dispatch(actions.addProductStart()),
+        onEditProduct: (product) => dispatch(actions.editProduct(product)),
+        onEditProductStart: () => dispatch(actions.editProductStart()),
+        onGetProductData: (productId) => dispatch(actions.getProductData(productId)),
         onGetisAdmin: (email) => dispatch(actions.getisAdmin(email)),
     };
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(withErrorHandler(AddProductForm, axios));
+export default connect(mapStateToProps, mapDispatchToProps)(withErrorHandler(EditProductForm, axios));

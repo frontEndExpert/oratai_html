@@ -4,7 +4,15 @@ import { updateObject } from '../../shared/utility';
 const initialState = {
     loading: false,
     products: [],
-    product: []
+    product: [],
+    editShow: false
+};
+
+const editOpen = ( state, action ) => {
+    return updateObject( state, { editShow: true } );
+};
+const editClose = ( state, action ) => {
+    return updateObject( state, { editShow: false } );
 };
 
 const productInit = ( state, action ) => {
@@ -28,6 +36,18 @@ const addProductSuccess = ( state, action ) => {
 const addProductFail = ( state, action ) => {
     console.log('add product fail');
     return updateObject( state, { loading: false } );
+};
+
+const deleteProductStart = ( state, action ) => {
+    console.log('add product fail');
+    return updateObject( state, { productAdded: false } );
+};
+
+const deleteProduct = ( state, action ) => {
+    return updateObject( state, {
+        productAdded: false,
+        loading: false
+    } );
 };
 
 const fetchProductsStart = ( state, action ) => {
@@ -54,6 +74,9 @@ const reducer = ( state = initialState, action ) => {
         case actionTypes.FETCH_PRODUCTS_START: return fetchProductsStart( state, action );
         case actionTypes.FETCH_PRODUCTS_SUCCESS: return fetchProductsSuccess( state, action );
         case actionTypes.FETCH_PRODUCTS_FAIL: return fetchProductsFail( state, action );
+        case actionTypes.DELETE_PRODUCT: return deleteProduct( state, action );
+        case actionTypes.EDIT_OPEN: return editOpen(state, action);
+        case actionTypes.EDIT_CLOSE: return editClose(state, action);
         default: return state;
     }
 };

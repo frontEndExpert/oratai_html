@@ -1,7 +1,12 @@
 export {
     addProduct,
     addProductStart,
-    fetchProducts
+    fetchProducts,
+    deleteProduct,
+    deleteProductStart,
+    deleteProductsFail,
+    editOpen,
+    editClose
 } from './products';
 export {
     authOpen,
@@ -10,5 +15,7 @@ export {
     auth,
     logout,
     setAuthRedirectPath,
+    getisAdmin,
+    addUser,
     authCheckState
 } from './auth';

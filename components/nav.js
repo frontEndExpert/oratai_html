@@ -23,29 +23,29 @@ class Nav extends Component {
         <>
         <li key="admin">
             <Link href='/admin'>
-              <a > <span className="glyphicon glyphicon-log-out"></span> Admin</a>
+              <a><span className="glyphicon glyphicon-wrench"></span> Admin</a>
             </Link> 
           </li>
-          <li key="logout">
-            <Link href='/logout'>
-              <a > <span className="glyphicon glyphicon-log-out"></span> Log Out</a>
-            </Link> 
+          <li key="logout" id="logout">
+            <button className="btn btn-link logout" onClick={this.props.onLogOut} >
+              <span className="glyphicon glyphicon-log-out"></span> Log Out
+            </button>
           </li>
           </>
       );
     }else if ( this.props.isAuthenticated ){
       authlinks = (
-          <li key="logout">
-            <button className="btn btn-link" onClick={this.props.onLogOut} >
-              <a ><span className="glyphicon glyphicon-user"></span> Log Out</a>
+          <li key="logout" id="logout">
+            <button className="btn btn-link logout" onClick={this.props.onLogOut} >
+              <span className="glyphicon glyphicon-log-out"></span> Log Out
             </button>
           </li>
       );
     } else {
       authlinks = (
-          <li key="login">   
-             <button className="btn btn-link" onClick={this.props.onAuthOpen} >
-              <a ><span className="glyphicon glyphicon-user"></span> Login</a>
+          <li key="login" id="logout">   
+             <button className="btn btn-link logout" onClick={this.props.onAuthOpen} >
+              <span className="glyphicon glyphicon-user"></span> Login
             </button> 
           </li>
       );
@@ -92,25 +92,40 @@ class Nav extends Component {
         margin: 0;
         font-family: -apple-system,BlinkMacSystemFont,Avenir Next,Avenir,Helvetica,sans-serif;
       }
+      .logout {
+        margin-top: 8px!important;
+      }
+      #logout > button {
+        height: 100%;
+        padding: 15px 15px;
+        margin: 0px!important;
+      }
       .navbar {
         margin-bottom: 0px!important;
         background-color: #3d2115 !important;
       }
-      a {
+      a, .navbar-default .navbar-nav>li> button {
         color: #BFA25E!important; 
         background-color: #3d2115 !important; // 333333 ora-brown #3d2115
-      
+        text-decoration: none;
       }
-      .navbar .navbar-nav>li> a:active, .navbar .navbar-nav>li> a.active {
+      .navbar .navbar-nav>li> a:active, .navbar .navbar-nav>li> a.active,
+      .navbar-default .navbar-nav>li> button:active, 
+      .navbar-default .navbar-nav>li> button.active {
         color: #cc9933 !important;  // F7E29D
         background-color: #581414!important; // ora-yellow cc9933
         font-weight: bold!important;
       }
       
-      .navbar-default .navbar-nav>li> a:hover, .navbar-default .navbar-nav>li> a:focus{
+      .navbar-default .navbar-nav>li> a:hover, 
+      .navbar-default .navbar-nav>li> a:focus,
+      .navbar-default .navbar-nav>li> button:hover, 
+      .navbar-default .navbar-nav>li> button:focus
+      {
         color: #efa40d!important;
         background-color: #6c4433!important;
       }
+
       .navbar-header a {
         display: inline-block;
         padding: 6px!important;
@@ -135,7 +150,7 @@ const mapStateToProps = state => {
       error: state.auth.error,
       isAuthenticated: state.auth.token !== null,
       authRedirectPath: state.auth.authRedirectPath,
-      isAdmin: true,
+      isAdmin: state.auth.isAdmin,
       authShow: state.auth.authShow
   };
 };

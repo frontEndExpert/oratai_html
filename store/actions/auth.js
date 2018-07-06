@@ -1,4 +1,5 @@
-import axios from 'axios';
+import authAxios from 'axios';
+import axios from '../../axios-firebase';
 
 import * as actionTypes from './actionTypes';
 
@@ -27,7 +28,7 @@ export const authSuccess = (token, userId) => {
         type: actionTypes.AUTH_SUCCESS,
         idToken: token,
         userId: userId,
-        isAdmin: true
+        isAdmin: false
     };
 };
 
@@ -36,7 +37,7 @@ export const authSuccess = (token, userId) => {
 export const authFail = (error) => {
     return {
         type: actionTypes.AUTH_FAIL,
-        error: error
+        error: error.message
     };
 };
 
@@ -44,10 +45,13 @@ export const authLogout = () => {
     localStorage.removeItem('token');
     localStorage.removeItem('expirationDate');
     localStorage.removeItem('userId');
-    localStorage.removeItem('isAdmin');
-
+    
     return {
-        type: actionTypes.AUTH_LOGOUT
+        type: actionTypes.AUTH_LOGOUT,
+        idToken: null,
+        userId: null,
+        isAdmin: false,
+        email: null
     };
 };
 
@@ -71,19 +75,65 @@ export const auth = (email, password, isSignup) => {
         if (!isSignup) {
             url = 'https://www.googleapis.com/identitytoolkit/v3/relyingparty/verifyPassword?key=AIzaSyDW7ozYaZ9Z8_6pqHnyeVIJFNgwEkKrD_A';
         }
-        axios.post(url, authData)
+        authAxios.post(url, authData)
             .then(response => {
                 const expirationDate = new Date(new Date().getTime() + response.data.expiresIn * 1000);
+                console.log('response.data',response.data);
                 localStorage.setItem('token', response.data.idToken);
                 localStorage.setItem('expirationDate', expirationDate);
                 localStorage.setItem('userId', response.data.localId);
                 dispatch(authSuccess(response.data.idToken, response.data.localId));
-                dispatch(authClose());
+                if (isSignup) {
+                    // set up new user is database
+                    dispatch(addUser(email));
+                }
+                dispatch(getisAdmin(email));
+
                 dispatch(checkAuthTimeout(response.data.expiresIn));
+                dispatch(authClose());
             })
             .catch(err => {
                 dispatch(authFail(err.response.data.error));
             });
+    };
+};
+
+export const addUser = ( email ) => {
+    return dispatch => {
+        dispatch( addUserStart() );
+        // ?auth=' + token + token,  rest/saving-data/products.json
+         axios.post( '/users.json', {'email': email, 'isAdmin': 'false'} )
+            .then( response => {
+              //  console.log('productData', productData);
+                dispatch( addUserSuccess( email ) );
+            } )
+            .catch( error => {
+                console.log(error);
+                dispatch( addUserFail( error ) );
+            } ); 
+    };
+};
+
+
+export const addUserStart = () => {
+    return {
+        type: actionTypes.ADDUSER_START,
+        email: null
+    };
+};
+
+export const addUserSuccess = (email) => {
+    return {
+        type: actionTypes.ADDUSER_SUCCESS,
+        email: email,
+        isAdmin: false
+    };
+};
+
+export const addUserFail = () => {
+    return {
+        type: actionTypes.ADDUSER_FAIL,
+        error: error
     };
 };
 
@@ -93,24 +143,26 @@ export const setAuthRedirectPath = (path) => {
         path: path
     };
 };
-
-export const getisAdmin = () => {
+// ?'orderBy'='email'&'equalTo'='" + email + "'"
+export const getisAdmin = (email) => {
+    console.log('getisAdmin Start');
     return dispatch => {
-        //dispatch(fetchProductsStart());
-
-        axios.get( '/users.json?orderBy="userId"&equalTo="' + userId + '"')
+        axios.get( "/users.json")
             .then( res => {
-                const isAdminArr = [];
+                let isAdminData = '';
                 for ( let key in res.data ) {
-                    isAdminArr.push( {
-                        ...res.data[key],
-                        id: key
-                    } );
-                }
-                localStorage.setItem('isAdmin', response.data.isAdmin);
-                dispatch(isAdminSuccess(isAdmin));
-                console.log('isAdminArr',isAdminArr);
-                console.log('res.isAdmin',response.data.isAdmin);
+                    //console.log('email' + email + ' res.data[key].email: ' + res.data[key].email);
+                     if((res.data[key].email).toLowerCase() === email.toLowerCase()){
+                        isAdminData = res.data[key].isAdmin ;
+                        console.log('isAdminData1',isAdminData);
+                        dispatch(isAdminSuccess(email, res.data[key].isAdmin));
+                        console.log(email + ' res.data[key].isAdmin: ' + res.data[key].isAdmin);
+                        
+                       
+                     };
+                    } ;
+                // console.log('res.data',res.data);
+                console.log('isAdminData2',isAdminData);
             } )
             .catch( err => {
                 dispatch(isAdminFail(err));
@@ -119,12 +171,19 @@ export const getisAdmin = () => {
 };
 
 
-export const isAdminSuccess = (userId, isAdmin) => {
+export const isAdminSuccess = (email, isAdmin) => {
     return {
-        type: actionTypes.AUTH_SUCCESS,
-        idToken: token,
-        userId: userId,
+        type: actionTypes.ISADMIN_SUCCESS,
+        email: email,
         isAdmin: isAdmin
+    };
+};
+
+
+export const isAdminFail = (error) => {
+    return {
+        type: actionTypes.ISADMIN_FAIL,
+        error: error
     };
 };
 

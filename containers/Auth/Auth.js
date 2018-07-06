@@ -88,7 +88,7 @@ class Auth extends Component {
         }
 
         let form = formElementsArray.map( formElement => (
-            <Input
+            <Input 
                 key={formElement.id}
                 elementType={formElement.config.elementType}
                 elementConfig={formElement.config.elementConfig}
@@ -96,6 +96,7 @@ class Auth extends Component {
                 invalid={!formElement.config.valid}
                 shouldValidate={formElement.config.validation}
                 touched={formElement.config.touched}
+                autoC={formElement.config.elementConfig.type}
                 changed={( event ) => this.inputChangedHandler( event, formElement.id )} />
         ) );
 
@@ -154,7 +155,8 @@ const mapStateToProps = state => {
         error: state.auth.error,
         isAuthenticated: state.auth.token !== null,
         authRedirectPath: state.auth.authRedirectPath,
-        authShow: state.auth.authShow
+        authShow: state.auth.authShow,
+        isAdmin: state.auth.isAdmin
     };
 };
 

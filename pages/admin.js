@@ -5,5 +5,6 @@ export default () => (
   <App>
     <p>Admin Page</p>
     <AddProductForm/>
+    <br/><br/>
   </App>
 )

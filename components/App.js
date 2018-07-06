@@ -3,7 +3,7 @@ import Head from './head';
 import Header from './header';
 import Nav from './nav';
 import Footer from './footer';
-import Modal from './UI/Modal/Modal';
+import AuthModal from './UI/Modal/AuthModal';
 import Auth from '../containers/Auth/Auth'
 import { connect } from 'react-redux';
 
@@ -16,9 +16,9 @@ class App extends Component {
     <Head title="Home OraTaiPhaThai" />
     <Header />
     <Nav  />
-    <Modal authShow={this.props.authShow}>
+    <AuthModal authShow={this.props.authShow}>
       <Auth />
-    </Modal>
+    </AuthModal>
     <div className="mainbody">
     {this.props.children}
     </div>
@@ -33,13 +33,14 @@ class App extends Component {
   }
 }
 
+//  isAdmin: true,
+
 const mapStateToProps = state => {
   return {
       loading: state.auth.loading,
       error: state.auth.error,
       isAuthenticated: state.auth.token !== null,
       authRedirectPath: state.auth.authRedirectPath,
-      isAdmin: true,
       authShow: state.auth.authShow
   };
 };

@@ -1,6 +1,6 @@
 import * as actionTypes from './actionTypes';
 import axios from '../../axios-firebase';
-
+import Router from 'next/router';
 
 
 export const addProductFail = ( error ) => {
@@ -37,6 +37,7 @@ export const addProduct = ( productData ) => {
             .then( response => {
               //  console.log('productData', productData);
                 dispatch( addProductSuccess( response.data.name, productData  ) );
+                Router.push('/products');
             } )
             .catch( error => {
                 console.log(error);
@@ -87,7 +88,7 @@ export const fetchProducts = () => {
                     product.productData = res.data[key].productData
                     fetchedProducts.push( product );
                 }
-                console.log('fetchedProducts',[...fetchedProducts]);
+                //console.log('fetchedProducts',[...fetchedProducts]);
                 dispatch(fetchProductsSuccess([...fetchedProducts]));
             })
              .catch( err => {
@@ -95,3 +96,45 @@ export const fetchProducts = () => {
              } );   
 }}
 
+export const deleteProductFail = ( error ) => {
+    return {
+        type: actionTypes.DELETE_PRODUCT_FAIL,
+        error: error
+    };
+};
+
+export const deleteProductStart = () => {
+    return {
+        type: actionTypes.DELETE_PRODUCT_START
+    };
+};
+
+export const deleteProduct = (id) => {
+    return dispatch => {
+        dispatch(deleteProductStart());
+    axios.delete( '/products/' + id + '.json', null )
+        .then( res => {
+                console.log('delete product success', res);
+                dispatch(fetchProducts());
+            })
+        .catch( err => {
+                console.log('delete product fail', err);
+                // dispatch(deleteProductsFail(err));
+             } );  
+};
+};
+
+
+export const editOpen = () => {
+    return {
+        type: actionTypes.EDIT_OPEN,
+        editShow: true
+    };
+};
+
+export const editClose = () => {
+    return {
+        type: actionTypes.EDIT_CLOSE,
+        editShow: false
+    };
+};
