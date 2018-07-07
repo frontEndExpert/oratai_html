@@ -3,9 +3,10 @@ import Head from './head';
 import Header from './header';
 import Nav from './nav';
 import Footer from './footer';
-import AuthModal from './UI/Modal/AuthModal';
+import Modal from './UI/Modal/Modal';
 import Auth from '../containers/Auth/Auth'
 import { connect } from 'react-redux';
+import * as actions from '../store/actions/index';
 
 class App extends Component {
 
@@ -16,9 +17,10 @@ class App extends Component {
     <Head title="Home OraTaiPhaThai" />
     <Header />
     <Nav  />
-    <AuthModal authShow={this.props.authShow}>
+    <Modal name="authFormModal" show={this.props.authShow} modalClosed={this.props.onAuthClose}>
+    <button className="btn btn-link" onClick={this.props.onAuthClose}>X</button>
       <Auth />
-    </AuthModal>
+    </Modal>
     <div className="mainbody">
     {this.props.children}
     </div>
@@ -45,5 +47,11 @@ const mapStateToProps = state => {
   };
 };
 
-export default connect( mapStateToProps )( App );
+const mapDispatchToProps = dispatch => {
+  return {
+      onAuthClose: () =>  dispatch( actions.authClose() )
+  };
+};
+
+export default connect( mapStateToProps, mapDispatchToProps )( App );
 // export default App

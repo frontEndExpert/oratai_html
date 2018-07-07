@@ -1,49 +1,24 @@
 import React, { Component } from 'react';
-
+import Backdrop from '../Backdrop/Backdrop'
 import Auxiliry from '../../../hoc/Auxiliry/Auxiliry';
-import Backdrop from '../Backdrop/Backdrop';
-import Button from '../Button/Button'
-import { connect } from 'react-redux';
-import * as actions from '../../../store/actions/index';
+
 class Modal extends Component {
 
     shouldComponentUpdate ( nextProps, nextState ) {
-        return nextProps.editShow !== this.props.editShow || nextProps.children !== this.props.children;
+        return nextProps.show !== this.props.show || nextProps.children !== this.props.children;
     }
-    // editShow={this.props.editShow} clicked={this.props.modalClosed}
     
     render () {
-//         let backdropdiv = null;
-//  if (this.props.editShow) {
-//     backdropdiv = <div className="backdrop" onClick={this.props.editClose}></div>;
-//  } else { backdropdiv = null; }
-
-        console.log('Modal this.props.editShow',this.props.editShow);
         return (
             <Auxiliry>
-                <div className="backdrop" onClick={this.props.onEditClose}
-                style={{
-                    display: this.props.editShow ? 'block' : 'none'
-                }}>
-                ></div>
-                <div className='Modal' 
-                    style={{
-                        transform: this.props.editShow ? 'translateY(0)' : 'translateY(-100vh)',
-                        opacity: this.props.editShow ? '1' : '0'
+                <Backdrop show={this.props.show} clicked={this.props.modalClosed} />
+                <div  className='Modal'
+                    style={{  transform: this.props.show ? 'translateY(0)' : 'translateY(-100vh)',
+                        opacity: this.props.show ? '1' : '0'
                     }}>
-                    <button className="btn btn-link" onClick={this.props.onEditClose}>X</button>
                     {this.props.children}
                 </div>
                 <style jsx>{`
-                .backdrop {
-                    width: 100%;
-                    height: 100%;
-                    position: fixed;
-                    z-index: 100;
-                    left: 0;
-                    top: 0;
-                    background-color: rgba(0, 0, 0, 0.5);
-                }
                 .Modal {
                     position: fixed;
                     z-index: 500;
@@ -71,18 +46,4 @@ class Modal extends Component {
     }
 }
 
-const mapStateToProps = state => {
-    return {
-        editShow: state.products.editShow
-    };
-  };
-
-const mapDispatchToProps = dispatch => {
-    return {
-        onEditClose: () =>  dispatch( actions.editClose() )
-    };
-};
-
-export default connect( mapStateToProps, mapDispatchToProps )(Modal);
-
-// export default Modal;
+export default Modal;

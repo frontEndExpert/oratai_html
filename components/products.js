@@ -13,7 +13,9 @@ class Products extends Component {
         currentPage: 1, 
         productsPerPage: 6,
         allProductsArr: [],
-        editShow: false
+        editShow: false,
+        p_id: null,
+        p_in: 0
     }
    
     handleClick = (event) => {
@@ -28,11 +30,11 @@ class Products extends Component {
       }
     handleEdit = (event) => {
         let pid = (event.target.id).slice(1);
+        let pIndex = event.target.p_in;
         console.log('edit-pid: ',pid);
         console.log('props.editShow: ',this.props.editShow);
-        console.log('state.editShow: ',this.state.editShow);
-        //this.props.onEditProduct(event.target.pid);
-        this.props.onEditOpen(pid);
+        this.setState({p_id: pid, p_in: pIndex});
+        this.props.onEditOpen();
       }
 
       
@@ -68,9 +70,11 @@ class Products extends Component {
                 >Delete This Product</button>;
             } else { return null}
         }
-        let editButton = (p_id) => {
+        let editButton = (p_id,p_in) => {
             if(this.props.isAdmin){
-            return <button className='btn btn-danger' id={'p'+p_id}
+            return <button className='btn btn-danger' 
+                id={'p'+p_id}
+                p_in={p_in}
                 onClick={this.handleEdit} 
                 >Edit This Product</button>;
             } else { return null}
@@ -99,7 +103,7 @@ class Products extends Component {
                   <span>Pattern: {product.productData.pattern}</span><br/>
                   <span className="product-price">Price: {product.productData.retail_price}</span><br/>
                   {delButton(product.id)}
-                  {editButton(product.id)}
+                  {editButton(product.id,index)}
                 </div>
               </div>
           ));
@@ -124,12 +128,19 @@ class Products extends Component {
           );
         });
         }
-       
+
+// productDataInfo = (i) => {
+ 	 //this.props.products[i]
+
+       // 
         return ( 
-         <div> 
-            <Modal id="editForm" editShow={this.props.editShow}>
-                <EditProductForm/>
-            </Modal>  
+         <div>
+            <Modal name="editFormModal" show={this.props.editShow} modalClosed={this.props.onEditClose}>
+            <button className="btn btn-link" onClick={this.props.onEditClose}>X</button>
+                <EditProductForm productId={this.state.p_id} 
+                productInfo={this.props.products[this.state.p_in]} />
+            </Modal > 
+            <div className="mainbody">
             <div className="cards">
                 {products}
             </div>
@@ -140,7 +151,11 @@ class Products extends Component {
                     </ul>
                 </nav>
             </div>
+            </div>
         <style jsx global>{`
+        .mainbody{
+            background-color: #2E2E2E;
+          }
         h1{
             font-weight: bold;
             font-size: 1.5em;
@@ -220,7 +235,8 @@ const mapDispatchToProps = dispatch => {
     return {
         onFetchProducts: () =>  dispatch( actions.fetchProducts() ),
         onDeleteProduct: (pId) =>  dispatch( actions.deleteProduct(pId) ),
-        onEditOpen: (pid) => dispatch( actions.editOpen(pid))
+        onEditOpen: () => dispatch( actions.editOpen()),
+        onEditClose: () => dispatch( actions.editClose())
     };
 };
 

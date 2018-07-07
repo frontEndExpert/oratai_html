@@ -19,7 +19,7 @@ class EditProductForm extends Component {
                     type: 'text',
                     placeholder: 'Product Name'
                 },
-                value: '',
+                value: this.state.productInfo.productData.product_name,
                 validation: {
                     required: true
                 },
@@ -70,22 +70,26 @@ class EditProductForm extends Component {
         },
         formIsValid: false,
         productData: {},
-        productAdded: false,
-        productId: 0
+        productInfo: {},
+        productId: this.props.productId
     };
 
     componentWillReceiveProps = (nextProps) => {
-        console.log('componentWillReceiveProps')
-        if(this.props.productAdded !== nextProps.productAdded){
-            this.setState({productAdded: nextProps.productAdded})
+    
+        if(this.props !== nextProps){
+            this.setState({productId: nextProps.productId, 
+                productInfo: this.props.productInfo})
         }
+     // this.setState({productDataIn: this.getProductData(this.state.productId)});
+     //this.setState({})
          // if(nextProps.productAdded) {Router.push('/products');}
-        console.log('componentWillReceiveProps', this.state.productAdded)
+        console.log('componentWillReceiveProps-Info', this.state.productInfo)
     };
 
     //componentWillUpdate 
     componentDidMount = () => {
         if (this.props.token !== null){
+           // this.getProductData(this.state.productId);
             console.log("addProduct onGetisAdmin");
             this.props.onGetisAdmin(); 
         };
@@ -107,11 +111,13 @@ class EditProductForm extends Component {
     };
 
     getProductData = (pid) => {
-        axios.get( '/products/pid.json' )
+        axios.get( '/products/'+ pid + '.json' )
         .then( res => {
             console.log(res.data);
+            return res.data
         });
     }
+
     inputChangedHandler = (event, inputIdentifier) => {
         console.log('product change handler');
         const updatedFormElement = updateObject(this.state.productForm[inputIdentifier], {
@@ -167,7 +173,7 @@ class EditProductForm extends Component {
 
         return (
             <div className='ProductData'>
-                <h4>Add Product Here</h4>
+                <h4>Edit Product Here</h4>
                 <div >
                 {form}
                 </div>
@@ -221,4 +227,4 @@ const mapDispatchToProps = dispatch => {
     };
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(withErrorHandler(EditProductForm, axios));
+export default connect(mapStateToProps, mapDispatchToProps)(EditProductForm, axios);

@@ -11,6 +11,7 @@ export const authOpen = () => {
 };
 
 export const authClose = () => {
+    console.log('auth_close');
     return {
         type: actionTypes.AUTH_CLOSE,
         authShow: false
