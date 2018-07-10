@@ -146,28 +146,23 @@ export const setAuthRedirectPath = (path) => {
 };
 // ?'orderBy'='email'&'equalTo'='" + email + "'"
 export const getisAdmin = (email) => {
-    console.log('getisAdmin Start');
     return dispatch => {
-        axios.get( "/users.json")
-            .then( res => {
+        axios.get("/users.json")
+            .then(res => {
                 let isAdminData = '';
-                for ( let key in res.data ) {
+                for (let key in res.data) {
                     //console.log('email' + email + ' res.data[key].email: ' + res.data[key].email);
-                     if((res.data[key].email).toLowerCase() === email.toLowerCase()){
-                        isAdminData = res.data[key].isAdmin ;
-                        console.log('isAdminData1',isAdminData);
+                    if ((res.data[key].email).toLowerCase() === email.toLowerCase()) {
+                        isAdminData = res.data[key].isAdmin;
+                        console.log('isAdminData1', isAdminData);
                         dispatch(isAdminSuccess(email, res.data[key].isAdmin));
-                        console.log(email + ' res.data[key].isAdmin: ' + res.data[key].isAdmin);
-                        
-                       
-                     };
-                    } ;
-                // console.log('res.data',res.data);
-                console.log('isAdminData2',isAdminData);
-            } )
-            .catch( err => {
+                        // console.log(email + ' res.data[key].isAdmin: ' + res.data[key].isAdmin);
+                    };
+                };
+            })
+            .catch(err => {
                 dispatch(isAdminFail(err));
-            } );
+            });
     };
 };
 

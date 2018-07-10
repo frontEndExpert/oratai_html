@@ -18,13 +18,17 @@ const rootReducer = combineReducers({
 
 const exampleInitialState = {
     products: {
-    products: {},
-    loading: false
-},
-auth: { userId: 0,
+        products: {},
+        loading: false,
+        editShow: false,
+        p_in: 0
+    },
+    auth: { userId: 0,
         token: null,
         loading: false,
-        authShow: false}
+        authShow: false,
+        isAdmin: false
+    }
 };
 
 

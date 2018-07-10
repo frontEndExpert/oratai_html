@@ -10,7 +10,7 @@ import * as actions from '../store/actions/index';
 import { updateObject, checkValidity } from '../shared/utility';
 
 class EditProductForm extends Component {
-    
+
     state = {
         productForm: {
             product_name: {
@@ -19,12 +19,12 @@ class EditProductForm extends Component {
                     type: 'text',
                     placeholder: 'Product Name'
                 },
-                value: this.state.productInfo.productData.product_name,
+                value: '',
                 validation: {
                     required: true
                 },
                 valid: false,
-                touched: false
+                touched: true
             },
             color: {
                 elementType: 'input',
@@ -37,7 +37,7 @@ class EditProductForm extends Component {
                     required: true
                 },
                 valid: false,
-                touched: false
+                touched: true
             },
             retail_price: {
                 elementType: 'input',
@@ -52,7 +52,7 @@ class EditProductForm extends Component {
                     isNumeric: true
                 },
                 valid: false,
-                touched: false
+                touched: true
             },
             photo_url: {
                 elementType: 'input',
@@ -65,32 +65,50 @@ class EditProductForm extends Component {
                     required: true
                 },
                 valid: false,
-                touched: false
+                touched: true
             }
         },
-        formIsValid: false,
+        formIsValid: true,
         productData: {},
         productInfo: {},
-        productId: this.props.productId
+        p_in: this.props.pin
     };
-
-    componentWillReceiveProps = (nextProps) => {
     
-        if(this.props !== nextProps){
-            this.setState({productId: nextProps.productId, 
-                productInfo: this.props.productInfo})
-        }
-     // this.setState({productDataIn: this.getProductData(this.state.productId)});
-     //this.setState({})
-         // if(nextProps.productAdded) {Router.push('/products');}
-        console.log('componentWillReceiveProps-Info', this.state.productInfo)
-    };
+    //...this.props.myproductInfo.productData
+    // constructor(props) {
+    //     super(props);
+    //     // this.props = props;this.
+   // }
+    // componentDidUpdate(prevProps) {
+    //     if(prevProps.myProps !== this.props.myProp) {
+    //     }
+    // }
+    componentWillReceiveProps(nextProps) {
+        if(nextProps.myproductInfo){
+            if(this.state.productInfo !== nextProps.myproductInfo.productData){
+        //  console.log('Edit WillReceive nextProps.myproductInfo' + JSON.stringify(nextProps.myproductInfo.productData));
+        //  console.log('Edit WillReceive nextProps.pin' + nextProps.pin);
+            this.setState({
+                productInfo: {...nextProps.myproductInfo.productData},
+                p_in: nextProps.pin
+            });
 
-    //componentWillUpdate 
+            this.state.productForm.color.value = nextProps.myproductInfo.productData.color; 
+            this.state.productForm.product_name.value = nextProps.myproductInfo.productData.product_name; 
+            this.state.productForm.photo_url.value = nextProps.myproductInfo.productData.photo_url; 
+            this.state.productForm.retail_price.value = nextProps.myproductInfo.productData.retail_price; 
+
+            }
+        }
+        // console.log('Edit WillReceive state.productInfo' + JSON.stringify(this.state.productInfo));     
+      }
+  
+    
+  
+
     componentDidMount = () => {
         if (this.props.token !== null){
-           // this.getProductData(this.state.productId);
-            console.log("addProduct onGetisAdmin");
+            console.log("editProduct onGetisAdmin");
             this.props.onGetisAdmin(); 
         };
     };
@@ -102,27 +120,24 @@ class EditProductForm extends Component {
         for (let formElementIdentifier in this.state.productForm) {
             formData[formElementIdentifier] = this.state.productForm[formElementIdentifier].value;
         }
-        const product = {
-            productData: formData
-        }
+        // const product = {
+        //     productData: formData
+        // }
         this.setState({productData: formData});
-        this.props.onAddProduct(product); 
+        console.log('this.state.productData',this.state.productData);
+        console.log('this.state.productForm',this.state.productForm);
+        console.log('this.props.myproductInfo.id', this.props.myproductInfo.id);
+        this.props.onEditProduct(this.props.myproductInfo.id,this.state.productData); 
         
     };
 
-    getProductData = (pid) => {
-        axios.get( '/products/'+ pid + '.json' )
-        .then( res => {
-            console.log(res.data);
-            return res.data
-        });
-    }
+    
 
-    inputChangedHandler = (event, inputIdentifier) => {
+    inputChangedHandler = (value, inputIdentifier) => {
         console.log('product change handler');
         const updatedFormElement = updateObject(this.state.productForm[inputIdentifier], {
-            value: event.target.value,
-            valid: checkValidity(event.target.value, this.state.productForm[inputIdentifier].validation),
+            value: value,
+            valid: checkValidity(value, this.state.productForm[inputIdentifier].validation),
             touched: true
         });
         const updatedProductForm = updateObject(this.state.productForm, {
@@ -137,6 +152,15 @@ class EditProductForm extends Component {
     };
 
     render () {
+        console.log('Edit render props.myproductInfo' + this.props.myproductInfo);
+        console.log('Edit render state.productForm' + JSON.stringify(this.state.productForm));
+        // updateObject(this.state, {
+        //     productInfo: {...this.props.myproductInfo},
+        //     p_in: this.props.pin
+        // });
+
+
+
         const formElementsArray = [];
         for (let key in this.state.productForm) {
             formElementsArray.push({
@@ -144,9 +168,9 @@ class EditProductForm extends Component {
                 config: this.state.productForm[key]
             });
         }
-
+        console.log('formElementsArray', JSON.stringify(formElementsArray));
         let form = (
-            <form className="pro-form" onSubmit={this.productHandler}>
+            <form className="pro-form" style={{color: 'black'}} onSubmit={this.productHandler}>
                 {formElementsArray.map(formElement => (
                     <Input 
                         key={formElement.id}
@@ -156,7 +180,7 @@ class EditProductForm extends Component {
                         invalid={!formElement.config.valid}
                         shouldValidate={formElement.config.validation}
                         touched={formElement.config.touched}
-                        changed={(event) => this.inputChangedHandler(event, formElement.id)} />
+                        changed={(event) => this.inputChangedHandler(event.target.value, formElement.id)} />
                 ))}
                 <Button type='submit' btnType='Success' 
                 disabled={!this.state.formIsValid}>Save Changes</Button>
@@ -175,6 +199,8 @@ class EditProductForm extends Component {
             <div className='ProductData'>
                 <h4>Edit Product Here</h4>
                 <div >
+                    <p>product index: {this.props.pin}</p>
+                    <p>product Info: {JSON.stringify(this.props.myproductInfo)}</p>
                 {form}
                 </div>
             <style jsx >{`
@@ -182,7 +208,7 @@ class EditProductForm extends Component {
                 color: black;
             }
             .ProductData {
-                color: white!important;
+                color: black!important;
                 margin: 0px auto 0px auto;
                 width: 80%;
                 text-align: center;
@@ -220,10 +246,9 @@ const mapStateToProps = state => {
 // product, this.props.token
 const mapDispatchToProps = dispatch => {
     return {
-        onEditProduct: (product) => dispatch(actions.editProduct(product)),
+        onEditProduct: (id,product) => dispatch(actions.editProduct(id,product)),
         onEditProductStart: () => dispatch(actions.editProductStart()),
-        onGetProductData: (productId) => dispatch(actions.getProductData(productId)),
-        onGetisAdmin: (email) => dispatch(actions.getisAdmin(email)),
+        onGetisAdmin: (email) => dispatch(actions.getisAdmin(email))
     };
 };
 

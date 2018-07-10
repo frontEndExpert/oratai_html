@@ -43,7 +43,7 @@ const authSuccess = (state, action) => {
 const isAdminSuccess = (state, action) => {
     return updateObject( state, { 
         error: null,
-        isAdmin: action.isAdmin // true
+        isAdmin: action.isAdmin
      } );
 };
 

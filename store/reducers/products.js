@@ -5,22 +5,46 @@ const initialState = {
     loading: false,
     products: [],
     product: [],
-    editShow: false
+    editShow: false,
+    p_in: 0,
+    productInfo: {}
 };
 
 const editOpen = ( state, action ) => {
-    return updateObject( state, { editShow: true } );
+    return updateObject( state, { editShow: true, p_in: action.p_in } );
 };
 const editClose = ( state, action ) => {
     return updateObject( state, { editShow: false } );
 };
+
+const addOpen = ( state, action ) => {
+    return updateObject( state, { addShow: true } );
+};
+const addClose = ( state, action ) => {
+    return updateObject( state, { addShow: false } );
+};
+
+const editProductSuccess = ( state, action ) => {
+    console.log('edit product success: ');
+    return updateObject( state, { loading: false } );
+};
+
+const editProductStart = ( state, action ) => {
+    return updateObject( state, { loading: true } );
+};
+
+const editProductfail = ( state, action ) => {
+    console.log('add product fail');
+    return updateObject( state, { loading: false } );
+};
+
+
 
 const productInit = ( state, action ) => {
     return updateObject( state, { purchased: false } );
 };
 
 const addProductStart = ( state, action ) => {
-    //console.log('action products: ', products);
     return updateObject( state, { productAdded: false, loading: true } );
 };
 
@@ -77,6 +101,12 @@ const reducer = ( state = initialState, action ) => {
         case actionTypes.DELETE_PRODUCT: return deleteProduct( state, action );
         case actionTypes.EDIT_OPEN: return editOpen(state, action);
         case actionTypes.EDIT_CLOSE: return editClose(state, action);
+        case actionTypes.EDIT_PRODUCT_START: return editProductStart( state, action );
+        case actionTypes.EDIT_PRODUCT_SUCCESS: return editProductSuccess( state, action );
+        case actionTypes.EDIT_PRODUCT_FAIL: return editProductfail( state, action );
+        case actionTypes.ADD_OPEN: return addOpen(state, action);
+        case actionTypes.ADD_CLOSE: return addClose(state, action);
+
         default: return state;
     }
 };

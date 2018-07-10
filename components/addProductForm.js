@@ -84,12 +84,12 @@ class AddProductForm extends Component {
     };
 
     //componentWillUpdate 
-    componentDidMount = () => {
-        if (this.props.token !== null){
-            console.log("addProduct onGetisAdmin");
-            this.props.onGetisAdmin(); 
-        };
-    };
+    // componentDidMount = () => {
+    //     if (this.props.token !== null){
+    //         console.log("addProduct onGetisAdmin");
+    //         this.props.onGetisAdmin(); 
+    //     };
+    // };
 
     productHandler = ( event ) => {
         event.preventDefault();
@@ -160,13 +160,10 @@ class AddProductForm extends Component {
             form = <p key="errMsg">Only Admin Can Add Products!</p>
         }
 
-        // if ( this.props.productAdded ) {
-        //     Router.push('/products');
-        // } else { console.log('NOT redirect'); }
         return (
             <div className='ProductData'>
                 <h4>Add Product Here</h4>
-                <div >
+                <div className='pro-form'>
                 {form}
                 </div>
             <style jsx >{`
@@ -174,7 +171,7 @@ class AddProductForm extends Component {
                 color: black;
             }
             .ProductData {
-                color: white!important;
+                color: black!important;
                 margin: 0px auto 0px auto;
                 width: 80%;
                 text-align: center;
@@ -219,4 +216,4 @@ const mapDispatchToProps = dispatch => {
     };
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(withErrorHandler(AddProductForm, axios));
+export default connect(mapStateToProps, mapDispatchToProps)(AddProductForm, axios);

@@ -22,9 +22,9 @@ class Nav extends Component {
       authlinks = (
         <>
         <li key="admin">
-            <Link href='/admin'>
-              <a><span className="glyphicon glyphicon-wrench"></span> Admin</a>
-            </Link> 
+            <button className=" btn btn-warning logout disabled admin">
+              <span className="glyphicon glyphicon-wrench"></span> Admin Mode
+            </button> 
           </li>
           <li key="logout" id="logout">
             <button className="btn btn-link logout" onClick={this.props.onLogOut} >
@@ -95,6 +95,8 @@ class Nav extends Component {
       .logout {
         margin-top: 8px!important;
       }
+
+      
       #logout > button {
         height: 100%;
         padding: 15px 15px;
@@ -105,8 +107,8 @@ class Nav extends Component {
         background-color: #3d2115 !important;
       }
       a, .navbar-default .navbar-nav>li> button {
-        color: #BFA25E!important; 
-        background-color: #3d2115 !important; // 333333 ora-brown #3d2115
+        color: #BFA25E !important; 
+        background-color: #3d2115 ; // 333333 ora-brown #3d2115
         text-decoration: none;
       }
       .navbar .navbar-nav>li> a:active, .navbar .navbar-nav>li> a.active,
@@ -137,7 +139,9 @@ class Nav extends Component {
   text-align: left;
   vertical-align: middle;
 }
-
+.admin{
+  background-color: yellow !important;
+}
     `}</style>
   </nav>
 )

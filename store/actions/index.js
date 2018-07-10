@@ -6,7 +6,13 @@ export {
     deleteProductStart,
     deleteProductsFail,
     editOpen,
-    editClose
+    editClose,
+    editProduct,
+    editProductStart,
+    editProductFail,
+    editProductSuccess,
+    addOpen,
+    addClose
 } from './products';
 export {
     authOpen,

@@ -6,15 +6,19 @@ import withErrorHandler from '../hoc/withErrorHandler/withErrorHandler';
 import * as actions from '../store/actions/index';
 import Spinner from './UI/spinner/spinner';
 import EditProductForm from './EditProductForm';
+import AddProductForm from './addProductForm';
 import Modal from './UI/Modal/Modal';
 
 class Products extends Component {
+    constructor(props) {
+        super(props);
+    }
     state = {
         currentPage: 1, 
         productsPerPage: 6,
         allProductsArr: [],
         editShow: false,
-        p_id: null,
+        addShow: false,
         p_in: 0
     }
    
@@ -28,13 +32,18 @@ class Products extends Component {
         //console.log('id: ',event.target.id);
         this.props.onDeleteProduct(event.target.id);
       }
-    handleEdit = (event) => {
-        let pid = (event.target.id).slice(1);
-        let pIndex = event.target.p_in;
-        console.log('edit-pid: ',pid);
-        console.log('props.editShow: ',this.props.editShow);
-        this.setState({p_id: pid, p_in: pIndex});
-        this.props.onEditOpen();
+    handleEdit = (p_in) => {
+        //let pid = (event.target.id).slice(1);
+        let pIndex = p_in; // event.target.p_in;
+        //console.log('edit-pid: ',pid);
+        console.log('pIndex: ',pIndex);
+        this.setState({p_in: pIndex});
+        this.props.onEditOpen(pIndex);
+      }
+
+      handleAdd = () => {
+        console.log('add open1');
+        this.props.onAddOpen();
       }
 
       
@@ -45,50 +54,69 @@ class Products extends Component {
         }
     }
 
-    async componentWillMount () {
+    async componentDidMount () {
          this.props.onFetchProducts()
-        if (this.props.products.length <= 1) {
-            this.setState({allProductsArr: nextProps.products})
-        }
-        console.log('productsWillMount=', this.props.products,this.state.allProductsArr);
+      //  if (this.props.products.length <= 1) {
+            const sortedProductArray = this.props.products;
+           // const indexOfLastProduct = (sortedProductArray.length < productsPerPage)? sortedProductArray.length  : currentPage * productsPerPage;
+           // const indexOfFirstProduct = (sortedProductArray.length < productsPerPage)? 0 : indexOfLastProduct - productsPerPage;
+
+            sortedProductArray.sort( (a,b) => {
+                    if(a.productData.product_name < b.productData.product_name) return -1;
+                    if(a.productData.product_name > b.productData.product_name) return 1;
+                    return 0;
+            })
+			this.props.products = sortedProductArray;
+            this.setState({allProductsArr: this.props.products})
+      //   }
+        console.log('productsDidMount=', this.props.products,this.state.allProductsArr);
     }
 
-    // async componentDidMount() {
-    //     await this.props.onFetchProducts();
-    //     console.log('productsDidMount=', this.props.products);
-    //     console.log('loading=', this.props.loading);
-    // }
-
-    
-
+// onClick={() => confirm('Are you sure?')? this.handleDelete(event): null}
     render () {
         let renderPageNumbers = '';
         let delButton = (p_id) => {
             if(this.props.isAdmin){
-            return <button className='btn btn-danger' id={p_id}
-                onClick={this.handleDelete} 
-                >Delete This Product</button>;
+            return <button className='btn btn-danger' id={p_id} 
+                onClick={this.handleDelete}
+                >Delete</button>;
             } else { return null}
         }
-        let editButton = (p_id,p_in) => {
+        // id={'p'+p_id}
+        let editButton = (p_in) => {
             if(this.props.isAdmin){
-            return <button className='btn btn-danger' 
-                id={'p'+p_id}
+            return <button className='btn btn-success' 
                 p_in={p_in}
-                onClick={this.handleEdit} 
-                >Edit This Product</button>;
+                onClick={() => this.handleEdit(p_in)} 
+                >Edit {p_in}</button>;
             } else { return null}
         }
-
-
+        let addButton = () => {
+            if(this.props.isAdmin){
+            return <button className='btn btn-primary' 
+                onClick={this.handleAdd} id="addP"
+                >Add a New Product</button>;
+            } else { return null}
+        }
+        
         let products = <Spinner />;
         if ( !this.props.loading ) {
             //console.log('products3=', this.props.products);
-            const { currentPage, productsPerPage } = this.state;
+            const { currentPage, productsPerPage, allProductsArr } = this.state;
             // Logic for displaying current todos{product.productData.photourl}
-            const indexOfLastProduct = currentPage * productsPerPage;
-            const indexOfFirstProduct = indexOfLastProduct - productsPerPage;
-            const currentProducts = this.state.allProductsArr.slice(indexOfFirstProduct, indexOfLastProduct);
+            console.log('all',allProductsArr);
+            console.log('props',this.props.products)
+            const sortedProductArray = [...allProductsArr];
+            const indexOfLastProduct = (sortedProductArray.length < productsPerPage)? sortedProductArray.length  : currentPage * productsPerPage;
+            const indexOfFirstProduct = (sortedProductArray.length < productsPerPage)? 0 : indexOfLastProduct - productsPerPage;
+
+        //    sortedProductArray.sort( (a,b) => {
+        //            if(a.productData.product_name < b.productData.product_name) return -1;
+        //            if(a.productData.product_name > b.productData.product_name) return 1;
+        //            return 0;
+        //    })
+            // this.setState({allProductsArr: sortedProductArray});
+            const currentProducts = sortedProductArray.slice(indexOfFirstProduct, indexOfLastProduct);
             
             products = currentProducts.map((product, index) => (
              <div key={index}  className="card">
@@ -103,16 +131,11 @@ class Products extends Component {
                   <span>Pattern: {product.productData.pattern}</span><br/>
                   <span className="product-price">Price: {product.productData.retail_price}</span><br/>
                   {delButton(product.id)}
-                  {editButton(product.id,index)}
+                  {editButton(index)}
                 </div>
               </div>
           ));
     
-          // edit form
-         // let editForm = 
-
-
-
           // Logic for displaying page numbers
         const pageNumbers = [];
         for (let i = 1; i <= Math.ceil(this.props.products.length / productsPerPage); i++) {
@@ -132,15 +155,20 @@ class Products extends Component {
 // productDataInfo = (i) => {
  	 //this.props.products[i]
 
-       // 
+       // productId={this.state.p_id}
         return ( 
          <div>
             <Modal name="editFormModal" show={this.props.editShow} modalClosed={this.props.onEditClose}>
             <button className="btn btn-link" onClick={this.props.onEditClose}>X</button>
-                <EditProductForm productId={this.state.p_id} 
-                productInfo={this.props.products[this.state.p_in]} />
-            </Modal > 
+                <EditProductForm pin={this.state.p_in}
+                    myproductInfo={this.props.products[this.state.p_in]} />
+            </Modal >
+            <Modal name="addFormModal" show={this.props.addShow} modalClosed={this.props.onAddClose}>
+            <button className="btn btn-link" onClick={this.props.onAddClose}>X</button>
+                <AddProductForm  />
+            </Modal >
             <div className="mainbody">
+            {addButton()}
             <div className="cards">
                 {products}
             </div>
@@ -224,10 +252,12 @@ const mapStateToProps = state => {
     return {
         products: state.products.products,
         loading: state.products.loading,
-        token: state.auth.token,
-        userId: state.auth.userId,
+    //    token: state.auth.token,
+    //    userId: state.auth.userId,
         isAdmin: state.auth.isAdmin,
-        editShow: state.products.editShow
+        editShow: state.products.editShow,
+        addShow: state.products.addShow,
+        p_in: state.products.p_in
     };
 };
 
@@ -235,8 +265,10 @@ const mapDispatchToProps = dispatch => {
     return {
         onFetchProducts: () =>  dispatch( actions.fetchProducts() ),
         onDeleteProduct: (pId) =>  dispatch( actions.deleteProduct(pId) ),
-        onEditOpen: () => dispatch( actions.editOpen()),
-        onEditClose: () => dispatch( actions.editClose())
+        onEditOpen: (p_in) => dispatch( actions.editOpen(p_in)),
+        onEditClose: () => dispatch( actions.editClose()),
+        onAddOpen: () => dispatch( actions.addOpen()),
+        onAddClose: () => dispatch( actions.addClose()),
     };
 };
 
