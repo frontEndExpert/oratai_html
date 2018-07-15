@@ -8,6 +8,7 @@ import Spinner from './UI/spinner/spinner';
 import EditProductForm from './EditProductForm';
 import AddProductForm from './addProductForm';
 import Modal from './UI/Modal/Modal';
+import SearchBar from './filterBar.js';
 
 class Products extends Component {
     constructor(props) {
@@ -16,64 +17,146 @@ class Products extends Component {
     state = {
         currentPage: 1, 
         productsPerPage: 6,
+        productsPerRow: 3,
         allProductsArr: [],
         editShow: false,
         addShow: false,
-        p_in: 0
+        p_in: 0,
+        card_perscet: '20%',
+        productColor: 'all'
     }
+   handleClick = (event) => {
+       this.setState({
+           currentPage: Number(event.target.id)
+       });
+   }
+
+   handleDelete = (event) => {
+       //console.log('id: ',event.target.id);
+       this.props.onDeleteProduct(event.target.id);
+   }
+   handleEdit = (p_in) => {
+       //let pid = (event.target.id).slice(1);
+       let pIndex = p_in; // event.target.p_in;
+       this.setState({ p_in: pIndex });
+       this.props.onEditOpen(pIndex);
+   }
+
+   handleAdd = () => {
+       // console.log('add open1');
+       this.props.onAddOpen();
+   }
+
+   colorHandler = (event) => {
+       let productColor = event.target.id;
+       console.log('color ', color);
+       let filteredProductArray = this.props.products;
+
+       if (productColor === 'red') {
+           filteredProductArray = filteredProductArray.filter(product => product.productData.color !== 'red');
+       }
+       if (productColor === 'orange') {
+           filteredProductArray = filteredProductArray.filter(product => product.productData.color !== 'orange')
+       }
+       if (productColor === 'blue') {
+           filteredProductArray = filteredProductArray.filter(product => product.productData.color !== 'blue')
+       }
+       if (productColor === 'yellow') {
+           filteredProductArray = filteredProductArray.filter(product => product.productData.color !== 'yellow')
+       }
+       this.props.onUpdateProductsArray(filteredProductArray);
+   }
+
+   pppHandler = (event) => {
+       let ppp = event.target.id;
+       console.log('ppp', ppp);
+       this.setState({
+           productsPerPage: ppp,
+           currentPage: 1
+       });
+   }
+
+   pprHandler = (event) => {
+    let ppr = event.target.id;
+    console.log('ppr', ppr);
+    let card_perscet;
+    if(ppr==='2'){
+         card_perscet = '48%';}
+    else if(ppr==='3'){
+        card_perscet = '30%';}
+    else if(ppr==='4'){
+        card_perscet = '23%';}
+    else if(ppr==='5'){
+         card_perscet = '18%'; 
+    };
+console.log(card_perscet);
+    this.setState({
+       card_perscet : card_perscet,
+        currentPage: 1
+    });
+}
+sortArray(p_arr) {
+    p_arr = p_arr.sort((a, b) => {
+        if (a.productData.product_name < b.productData.product_name) return -1;
+        if (a.productData.product_name > b.productData.product_name) return 1;
+        return 0;
+    });
+    return p_arr;
+}
+   // componentWillUpdate(nextProps, nextState){
+        //componentDidUpdate(prevProps, prevState) {
+    componentWillMount(){
+       // this.props.onFetchProducts();
+    }        
+    componentWillReceiveProps(nextProps) {
+        //this.props.onFetchProducts();
+        
+    }
+
+    // shouldComponentUpdate(nextProps, nextState, nextContext){
+    //     if(this.props.products !== nextProps.products || 
+    //         this.state.productForm !== nextState.productForm ||
+    //         this.state.productData !== nextState.productData ||
+    //         this.state.productInfo !== nextState.productInfo
+    //     ){ return true} else return false;
+    // }
+
    
-    handleClick = (event) => {
-        this.setState({
-          currentPage: Number(event.target.id)
-        });
-      }
 
-    handleDelete = (event) => {
-        //console.log('id: ',event.target.id);
-        this.props.onDeleteProduct(event.target.id);
-      }
-    handleEdit = (p_in) => {
-        //let pid = (event.target.id).slice(1);
-        let pIndex = p_in; // event.target.p_in;
-        //console.log('edit-pid: ',pid);
-        console.log('pIndex: ',pIndex);
-        this.setState({p_in: pIndex});
-        this.props.onEditOpen(pIndex);
-      }
+     componentDidMount () {
+                  this.props.onFetchProducts();
+                  console.log('componentDidMount this.props.products',this.props.products);
+                  console.log('componentDidMount this.state.allProductsArr',this.state.allProductsArr);
+        // if(this.props.products.length > 0 && this.state.allProductsArr.length == 0){
+        // let sortedProductArray = this.sortArray(this.props.products)
+        // console.log('componentDidMount sortedProductArray',sortedProductArray);
+        //     this.setState({
+        //         allProductsArr: sortedProductArray,
+        //         editShow: this.props.editShow
+        //     });
+        // }
+     }
+     componentDidUpdate(prevProps, prevState) {
+      //  this.props.onFetchProducts();
+        console.log('componentDidUpdate this.props.products',this.props.products);
+        console.log('componentDidUpdate this.state.allProductsArr',this.state.allProductsArr);
 
-      handleAdd = () => {
-        console.log('add open1');
-        this.props.onAddOpen();
-      }
-
-      
-    componentWillReceiveProps(nextProps){
-        console.log('componentWillReceiveProps')
-        if(this.props.products !== nextProps.products){
-            this.setState({allProductsArr: nextProps.products, editShow: nextProps.editShow})
+        if( this.props.products.length > 0 && 
+            prevState.allProductsArr.length < this.state.allProductsArr.length ){
+            let sortedProductArray = this.sortArray(this.props.products)
+            console.log('componentDidUpdate sortedProductArray',sortedProductArray);
+                this.setState({
+                    allProductsArr: sortedProductArray,
+                    editShow: this.props.editShow
+                });
+           // this.forceUpdate();
         }
-    }
-
-    async componentDidMount () {
-         this.props.onFetchProducts()
-      //  if (this.props.products.length <= 1) {
-            const sortedProductArray = this.props.products;
-           // const indexOfLastProduct = (sortedProductArray.length < productsPerPage)? sortedProductArray.length  : currentPage * productsPerPage;
-           // const indexOfFirstProduct = (sortedProductArray.length < productsPerPage)? 0 : indexOfLastProduct - productsPerPage;
-
-            sortedProductArray.sort( (a,b) => {
-                    if(a.productData.product_name < b.productData.product_name) return -1;
-                    if(a.productData.product_name > b.productData.product_name) return 1;
-                    return 0;
-            })
-			this.props.products = sortedProductArray;
-            this.setState({allProductsArr: this.props.products})
-      //   }
-        console.log('productsDidMount=', this.props.products,this.state.allProductsArr);
+        
     }
 
 // onClick={() => confirm('Are you sure?')? this.handleDelete(event): null}
     render () {
+
         let renderPageNumbers = '';
         let delButton = (p_id) => {
             if(this.props.isAdmin){
@@ -93,29 +176,22 @@ class Products extends Component {
         }
         let addButton = () => {
             if(this.props.isAdmin){
-            return <button className='btn btn-primary' 
+            return <button className='btn btn-primary adminAdd' 
                 onClick={this.handleAdd} id="addP"
                 >Add a New Product</button>;
             } else { return null}
         }
-        
-        let products = <Spinner />;
-        if ( !this.props.loading ) {
-            //console.log('products3=', this.props.products);
+      
+        let products = <Spinner color="white"/>;
+        if ( !this.props.loading && this.state.allProductsArr.length > 0 ) {
             const { currentPage, productsPerPage, allProductsArr } = this.state;
-            // Logic for displaying current todos{product.productData.photourl}
-            console.log('all',allProductsArr);
-            console.log('props',this.props.products)
+            console.log('render allProductsArr=', allProductsArr);
+            console.log('render this.props.products',this.props.products);
+            // console.log('props',this.props.products)
             const sortedProductArray = [...allProductsArr];
+            //const sortedProductArray = [...this.props.products];
             const indexOfLastProduct = (sortedProductArray.length < productsPerPage)? sortedProductArray.length  : currentPage * productsPerPage;
             const indexOfFirstProduct = (sortedProductArray.length < productsPerPage)? 0 : indexOfLastProduct - productsPerPage;
-
-        //    sortedProductArray.sort( (a,b) => {
-        //            if(a.productData.product_name < b.productData.product_name) return -1;
-        //            if(a.productData.product_name > b.productData.product_name) return 1;
-        //            return 0;
-        //    })
-            // this.setState({allProductsArr: sortedProductArray});
             const currentProducts = sortedProductArray.slice(indexOfFirstProduct, indexOfLastProduct);
             
             products = currentProducts.map((product, index) => (
@@ -128,7 +204,7 @@ class Products extends Component {
                   <h1 className="product-heading">{product.productData.product_name}</h1>
                   <span>Description: {product.productData.description}</span><br/>
                   <span>Color: {product.productData.color}</span><br/>
-                  <span>Pattern: {product.productData.pattern}</span><br/>
+                  <span>photo_url: {product.productData.photo_url}</span><br/>
                   <span className="product-price">Price: {product.productData.retail_price}</span><br/>
                   {delButton(product.id)}
                   {editButton(index)}
@@ -150,12 +226,10 @@ class Products extends Component {
             </span></li>
           );
         });
-        }
-
-// productDataInfo = (i) => {
- 	 //this.props.products[i]
-
-       // productId={this.state.p_id}
+        } else { products = <Spinner color="red" />;}
+        // a way to controll products per row
+        const card_perscet = this.state.card_perscet;
+        console.log('rwnder ',card_perscet);
         return ( 
          <div>
             <Modal name="editFormModal" show={this.props.editShow} modalClosed={this.props.onEditClose}>
@@ -168,7 +242,13 @@ class Products extends Component {
                 <AddProductForm  />
             </Modal >
             <div className="mainbody">
-            {addButton()}
+            <SearchBar handleAdd={this.handleAdd}
+                colorHandler={this.colorHandler}
+                pppHandler = {this.pppHandler}
+                pprHandler={this.pprHandler}
+                isAdmin={this.props.isAdmin}
+             />
+        {/*searchBar()*/}
             <div className="cards">
                 {products}
             </div>
@@ -181,8 +261,14 @@ class Products extends Component {
             </div>
             </div>
         <style jsx global>{`
+        
         .mainbody{
             background-color: #2E2E2E;
+          }
+          .adminAdd {
+              color: white !important;
+              background-color: blue !important;
+              margin-top: 6px;
           }
         h1{
             font-weight: bold;
@@ -200,7 +286,7 @@ class Products extends Component {
                 text-align: center;
             }
             img.prd-img {
-                width:26vw!important;
+                width: 100%;
             }
             .cards{
                 display: flex;
@@ -209,7 +295,7 @@ class Products extends Component {
                 flex-wrap: wrap;
             }
             .card{
-                width: 30%;
+                width: ${card_perscet};
                 border: 1px solid brown;
                 border-radius: 20px;
                 margin: 10px;
@@ -269,6 +355,7 @@ const mapDispatchToProps = dispatch => {
         onEditClose: () => dispatch( actions.editClose()),
         onAddOpen: () => dispatch( actions.addOpen()),
         onAddClose: () => dispatch( actions.addClose()),
+        onUpdateProductsArray: () => dispatch(actions.updateProductsArray())
     };
 };
 

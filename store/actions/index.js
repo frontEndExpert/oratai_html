@@ -12,7 +12,8 @@ export {
     editProductFail,
     editProductSuccess,
     addOpen,
-    addClose
+    addClose,
+    updateProductsArray
 } from './products';
 export {
     authOpen,

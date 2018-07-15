@@ -10,7 +10,7 @@ import React from "react";
 const Header = () => (
   <header >
   <div className='header'>
-    <img src='../static/orataiphathai_bg1.jpg' width='1600' height='270' className='img-responsive myimg' />
+    <img src='../static/orataiphathai_bg.jpg' width='1600' height='270' className='img-responsive myimg' />
   </div>
    <style jsx>{`
   @media (min-width: 601px) {

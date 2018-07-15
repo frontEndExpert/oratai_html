@@ -80,8 +80,7 @@ const fetchProductsStart = ( state, action ) => {
 
 const fetchProductsSuccess = ( state, action ) => {
     return updateObject( state, {
-        products: action.products,
-        loading: false
+        products: action.products
     } );
 };
 
@@ -106,6 +105,7 @@ const reducer = ( state = initialState, action ) => {
         case actionTypes.EDIT_PRODUCT_FAIL: return editProductfail( state, action );
         case actionTypes.ADD_OPEN: return addOpen(state, action);
         case actionTypes.ADD_CLOSE: return addClose(state, action);
+        case actionTypes.UPDATE_PRODUCTS_ARRAY: return updateProductsArray(state, action);
 
         default: return state;
     }

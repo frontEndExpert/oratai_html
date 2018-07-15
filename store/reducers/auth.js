@@ -30,7 +30,7 @@ const getisAdmin = ( state, action ) => {
 
 
 const authSuccess = (state, action) => {
-    console.log('action.isAdmin', action.isAdmin)
+    // console.log('action.isAdmin', action.isAdmin)
     return updateObject( state, { 
         token: action.idToken,
         userId: action.userId,

@@ -10,7 +10,7 @@ class Logout extends Component {
         resolve({ appName: "Super App" });
       }, 1000);
     });
-    console.log('logout' + context.pathname);
+    // console.log('logout' + context.pathname);
     if(context.pathname='/logout'){
       Router.push(`/`);
     }

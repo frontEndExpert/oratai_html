@@ -1,7 +1,8 @@
 import React from 'react';
 
-const spinner = () => (
-    <div className='Loader'>Loading...
+//#fff
+const spinner = (props) => (
+    <div className='Loader'>Loading... 
     <style jsx>{`
     .Loader,
     .Loader:before,
@@ -29,7 +30,7 @@ const spinner = () => (
     .Loader:before {
       width: 5.2em;
       height: 10.2em;
-      background: #fff;
+      background: ${props.color};
       border-radius: 10.2em 0 0 10.2em;
       top: -0.1em;
       left: -0.1em;

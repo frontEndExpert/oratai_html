@@ -8,14 +8,14 @@ import * as actions from '../store/actions/index';
 class Nav extends Component {
 
   static getInitialProps ({ context }) {
-    console.log('req' + context.pathname);
+    // console.log('req' + context.pathname);
     return { pathname: context.pathname  };  
   }
 
  
   render() {
-    console.log('isAuthenticated', this.props.isAuthenticated);
-    console.log('isAdmin', this.props.isAdmin);
+    // console.log('isAuthenticated', this.props.isAuthenticated);
+    // console.log('isAdmin', this.props.isAdmin);
     let authlinks = '';
     
     if ( this.props.isAuthenticated && this.props.isAdmin ) {
@@ -87,7 +87,7 @@ class Nav extends Component {
       </ul>
     </div>
 
-    <style jsx global>{`
+    <style jsx >{`
       :global(body) {
         margin: 0;
         font-family: -apple-system,BlinkMacSystemFont,Avenir Next,Avenir,Helvetica,sans-serif;

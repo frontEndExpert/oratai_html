@@ -75,12 +75,12 @@ class AddProductForm extends Component {
     };
 
     componentWillReceiveProps = (nextProps) => {
-        console.log('componentWillReceiveProps')
+        //console.log('componentWillReceiveProps')
         if(this.props.productAdded !== nextProps.productAdded){
             this.setState({productAdded: nextProps.productAdded})
         }
          // if(nextProps.productAdded) {Router.push('/products');}
-        console.log('componentWillReceiveProps', this.state.productAdded)
+       // console.log('componentWillReceiveProps', this.state.productAdded)
     };
 
     //componentWillUpdate 
@@ -108,7 +108,7 @@ class AddProductForm extends Component {
 
    
     inputChangedHandler = (event, inputIdentifier) => {
-        console.log('product change handler');
+       // console.log('product change handler');
         const updatedFormElement = updateObject(this.state.productForm[inputIdentifier], {
             value: event.target.value,
             valid: checkValidity(event.target.value, this.state.productForm[inputIdentifier].validation),
@@ -151,7 +151,7 @@ class AddProductForm extends Component {
                 disabled={!this.state.formIsValid}>Add This Product</Button>
             </form>
         );
-        console.log('this.props.isAdmin',this.props.isAdmin);
+     //   console.log('this.props.isAdmin',this.props.isAdmin);
         if ( this.props.loading ) {
             form = <Spinner />;
         } else if (this.props.token === null) {

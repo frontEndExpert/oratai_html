@@ -80,14 +80,14 @@ export const fetchProducts = () => {
     axios.get( '/products.json' )
         .then( res => {
                 const fetchedProducts = [];
-                console.log('res.data',res.data);
+                // console.log('res.data',res.data);
                 for ( let key in res.data ) {
                     let product = {};
                     product.id = key;
                     product.productData = res.data[key].productData
                     fetchedProducts.push( product );
                 }
-                console.log('fetchedProducts',[...fetchedProducts]);
+                // console.log('fetchedProducts',[...fetchedProducts]);
                 dispatch(fetchProductsSuccess([...fetchedProducts]));
             })
              .catch( err => {
@@ -114,7 +114,7 @@ export const deleteProduct = (id) => {
             dispatch(deleteProductStart());
             axios.delete('/products/' + id + '.json', null)
                 .then(res => {
-                    console.log('delete product success', res);
+                     console.log('delete product success');
                     dispatch(fetchProducts());
                 })
                 .catch(err => {
@@ -156,6 +156,12 @@ export const editClose = () => {
     };
 };
 
+export const updateProductsArray = (p_arr) => {
+    return {
+        type: actionTypes.UPDATE_PRODUCTS_ARRAY,
+        products: p_arr
+    };
+};
 
 export const editProductStart = () => {
     return {
@@ -178,14 +184,14 @@ export const editProductFail = ( error ) => {
 };
 
 export const editProduct = (id, productData ) => {
-    console.log('action id', id);
-    console.log('action productData', productData);
+    // console.log('action id', id);
+    // console.log('action productData', productData);
     return dispatch => {
        dispatch( editProductStart() );
       //  ?auth=' + token + token,  rest/saving-data/products.json
          axios.put( '/products/'+ id +'/productData.json', productData )
             .then( response => {
-                console.log('action Editproduct Success', response);
+                console.log('action Editproduct Success');
                 dispatch( editProductSuccess( ) );
               
                 dispatch( editClose());

@@ -11,7 +11,7 @@ class Backdrop extends Component {
   // style={ showbackdrop }
 render(){
         // console.log('this.props.show',this.props.show); 
-        console.log('Backdrop this.props.authShow',this.props.authShow);
+        // console.log('Backdrop this.props.authShow',this.props.authShow);
  //let backdropdiv = (this.props.authShow) ? <div className="backdrop" onClick={this.props.authClose}></div> : null;
  let backdropdiv = null;
  if (this.props.authShow) {

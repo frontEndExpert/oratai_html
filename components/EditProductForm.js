@@ -23,7 +23,7 @@ class EditProductForm extends Component {
                 validation: {
                     required: true
                 },
-                valid: false,
+                valid: true,
                 touched: true
             },
             color: {
@@ -36,7 +36,7 @@ class EditProductForm extends Component {
                 validation: {
                     required: true
                 },
-                valid: false,
+                valid: true,
                 touched: true
             },
             retail_price: {
@@ -51,7 +51,7 @@ class EditProductForm extends Component {
                     maxLength: 7,
                     isNumeric: true
                 },
-                valid: false,
+                valid: true,
                 touched: true
             },
             photo_url: {
@@ -64,7 +64,7 @@ class EditProductForm extends Component {
                 validation: {
                     required: true
                 },
-                valid: false,
+                valid: true,
                 touched: true
             }
         },
@@ -74,15 +74,6 @@ class EditProductForm extends Component {
         p_in: this.props.pin
     };
     
-    //...this.props.myproductInfo.productData
-    // constructor(props) {
-    //     super(props);
-    //     // this.props = props;this.
-   // }
-    // componentDidUpdate(prevProps) {
-    //     if(prevProps.myProps !== this.props.myProp) {
-    //     }
-    // }
     componentWillReceiveProps(nextProps) {
         if(nextProps.myproductInfo){
             if(this.state.productInfo !== nextProps.myproductInfo.productData){
@@ -90,43 +81,35 @@ class EditProductForm extends Component {
         //  console.log('Edit WillReceive nextProps.pin' + nextProps.pin);
             this.setState({
                 productInfo: {...nextProps.myproductInfo.productData},
+                productData: {...nextProps.myproductInfo.productData},
                 p_in: nextProps.pin
             });
-
             this.state.productForm.color.value = nextProps.myproductInfo.productData.color; 
             this.state.productForm.product_name.value = nextProps.myproductInfo.productData.product_name; 
             this.state.productForm.photo_url.value = nextProps.myproductInfo.productData.photo_url; 
             this.state.productForm.retail_price.value = nextProps.myproductInfo.productData.retail_price; 
-
-            }
-        }
         // console.log('Edit WillReceive state.productInfo' + JSON.stringify(this.state.productInfo));     
       }
-  
-    
-  
+    }
+}
 
     componentDidMount = () => {
         if (this.props.token !== null){
-            console.log("editProduct onGetisAdmin");
             this.props.onGetisAdmin(); 
         };
     };
 
     productHandler = ( event ) => {
         event.preventDefault();
-        
         const formData = {};
+        console.log('productHandler-this.state.productForm ',this.state.productForm);
         for (let formElementIdentifier in this.state.productForm) {
             formData[formElementIdentifier] = this.state.productForm[formElementIdentifier].value;
         }
-        // const product = {
-        //     productData: formData
-        // }
         this.setState({productData: formData});
-        console.log('this.state.productData',this.state.productData);
-        console.log('this.state.productForm',this.state.productForm);
-        console.log('this.props.myproductInfo.id', this.props.myproductInfo.id);
+        console.log('productHandler-this.state.productData',this.state.productData);
+        console.log('productHandler-this.props.myproductInfo.productData', this.props.myproductInfo.productData);
+        console.log('productHandler-this.props.myproductInfo.id', this.props.myproductInfo.id);
         this.props.onEditProduct(this.props.myproductInfo.id,this.state.productData); 
         
     };
@@ -134,8 +117,9 @@ class EditProductForm extends Component {
     
 
     inputChangedHandler = (value, inputIdentifier) => {
-        console.log('product change handler');
-        const updatedFormElement = updateObject(this.state.productForm[inputIdentifier], {
+        // console.log('product change handler');
+        const updatedFormElement = updateObject(
+            this.state.productForm[inputIdentifier], {
             value: value,
             valid: checkValidity(value, this.state.productForm[inputIdentifier].validation),
             touched: true
@@ -148,12 +132,25 @@ class EditProductForm extends Component {
         for (let inputIdentifier in updatedProductForm) {
             formIsValid = updatedProductForm[inputIdentifier].valid && formIsValid;
         }
-        this.setState({productForm: updatedProductForm, formIsValid: formIsValid});
-    };
+        // updating state productData
+        const formData = {};
+        console.log('inputChangedHandler-updatedProductForm ',updatedProductForm);
+        for (let formElementIdentifier in updatedProductForm) {
+            formData[formElementIdentifier] =  updatedProductForm[formElementIdentifier].value;
+        } //    this.state.productForm
+        //this.setState({productData: formData});
+        this.setState({
+            productData: formData, 
+            productForm: updatedProductForm, 
+            formIsValid: formIsValid
+        }); 
+    }
+    
+    
 
     render () {
-        console.log('Edit render props.myproductInfo' + this.props.myproductInfo);
-        console.log('Edit render state.productForm' + JSON.stringify(this.state.productForm));
+        // console.log('Edit render props.myproductInfo' + this.props.myproductInfo);
+        // console.log('Edit render state.productForm' + JSON.stringify(this.state.productForm));
         // updateObject(this.state, {
         //     productInfo: {...this.props.myproductInfo},
         //     p_in: this.props.pin
@@ -168,7 +165,7 @@ class EditProductForm extends Component {
                 config: this.state.productForm[key]
             });
         }
-        console.log('formElementsArray', JSON.stringify(formElementsArray));
+        // console.log('formElementsArray', JSON.stringify(formElementsArray));
         let form = (
             <form className="pro-form" style={{color: 'black'}} onSubmit={this.productHandler}>
                 {formElementsArray.map(formElement => (
@@ -186,7 +183,7 @@ class EditProductForm extends Component {
                 disabled={!this.state.formIsValid}>Save Changes</Button>
             </form>
         );
-        console.log('this.props.isAdmin',this.props.isAdmin);
+        // console.log('this.props.isAdmin',this.props.isAdmin);
         if ( this.props.loading ) {
             form = <Spinner />;
         } else if (this.props.token === null) {
@@ -199,8 +196,8 @@ class EditProductForm extends Component {
             <div className='ProductData'>
                 <h4>Edit Product Here</h4>
                 <div >
-                    <p>product index: {this.props.pin}</p>
-                    <p>product Info: {JSON.stringify(this.props.myproductInfo)}</p>
+                    <p>this.state.productData: {JSON.stringify(this.state.productData)}</p>
+                    <p>this.props.myproductInfo: {JSON.stringify(this.props.myproductInfo)}</p>
                 {form}
                 </div>
             <style jsx >{`
