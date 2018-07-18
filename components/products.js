@@ -49,7 +49,7 @@ class Products extends Component {
 
    colorHandler = (event) => {
        let productColor = event.target.id;
-       console.log('color ', color);
+       console.log('productColor ', productColor);
        let filteredProductArray = this.props.products;
 
        if (productColor === 'red') {
@@ -107,9 +107,20 @@ sortArray(p_arr) {
         //componentDidUpdate(prevProps, prevState) {
     componentWillMount(){
        // this.props.onFetchProducts();
+
     }        
     componentWillReceiveProps(nextProps) {
         //this.props.onFetchProducts();
+        // console.log('WillReceiveProps this.props.products',this.props.products);
+        // if(this.props.products.length == 0 || this.props.products.length > 0 && this.state.allProductsArr.length == 0){
+        //     this.props.onFetchProducts();
+        //     let sortedProductArray = this.sortArray(this.props.products)
+        // console.log('WillReceiveProps sortedProductArray',sortedProductArray);
+        //     this.setState({
+        //         allProductsArr: sortedProductArray,
+        //         editShow: this.props.editShow
+        //     });
+        // }
         
     }
 
@@ -123,40 +134,33 @@ sortArray(p_arr) {
 
    
 
-     componentDidMount () {
-                  this.props.onFetchProducts();
-                  console.log('componentDidMount this.props.products',this.props.products);
-                  console.log('componentDidMount this.state.allProductsArr',this.state.allProductsArr);
-        // if(this.props.products.length > 0 && this.state.allProductsArr.length == 0){
-        // let sortedProductArray = this.sortArray(this.props.products)
-        // console.log('componentDidMount sortedProductArray',sortedProductArray);
-        //     this.setState({
-        //         allProductsArr: sortedProductArray,
-        //         editShow: this.props.editShow
-        //     });
-        // }
+     componentDidMount() {
+         this.props.onFetchProducts();
+         // if(this.props.products.length == 0 || this.props.products.length > 0 && this.state.allProductsArr.length == 0){
+         // myVar = setTimeout(()=> this.setState({position: 1}), 3000)
+         if (this.props.products.length > 0) {
+             let sortedProductArray = this.sortArray(this.props.products)
+             console.log('componentDidMount sortedProductArray', sortedProductArray);
+             console.log('componentDidMount this.props.loading', this.props.loading);
+             this.setState({
+                 allProductsArr: sortedProductArray,
+                 editShow: this.props.editShow
+             });
+         } else {
+             console.log('componentDidMount this.props.products', this.props.products);
+             console.log('componentDidMount this.state.allProductsArr', this.state.allProductsArr);
+             console.log('props.product ==0');
+         }
      }
      componentDidUpdate(prevProps, prevState) {
       //  this.props.onFetchProducts();
-        console.log('componentDidUpdate this.props.products',this.props.products);
-        console.log('componentDidUpdate this.state.allProductsArr',this.state.allProductsArr);
-
-        if( this.props.products.length > 0 && 
-            prevState.allProductsArr.length < this.state.allProductsArr.length ){
-            let sortedProductArray = this.sortArray(this.props.products)
-            console.log('componentDidUpdate sortedProductArray',sortedProductArray);
-                this.setState({
-                    allProductsArr: sortedProductArray,
-                    editShow: this.props.editShow
-                });
-           // this.forceUpdate();
-        }
+     //   console.log('componentDidUpdate this.props.products',this.props.products);
+     //   console.log('componentDidUpdate this.state.allProductsArr',this.state.allProductsArr);
+     //   console.log('componentDidUpdate this.props.loading',this.props.loading);
         
-    }
+        }
 
-// onClick={() => confirm('Are you sure?')? this.handleDelete(event): null}
     render () {
-
         let renderPageNumbers = '';
         let delButton = (p_id) => {
             if(this.props.isAdmin){

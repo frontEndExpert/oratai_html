@@ -80,7 +80,8 @@ const fetchProductsStart = ( state, action ) => {
 
 const fetchProductsSuccess = ( state, action ) => {
     return updateObject( state, {
-        products: action.products
+        products: action.products,
+        loading: false
     } );
 };
 
