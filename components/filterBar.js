@@ -1,14 +1,45 @@
 import React, { Component } from 'react';
+import Checkbox from './UI/CheckBox/CheckBox';
 
 class SearchBar extends Component {
   constructor(props) {
       super(props);
   }
-// let searchBar = () => {
 
+  filtered = this.props.filtered;
+
+// state = {
+//     filtered: false
+//   }
+
+//   componentWillMount = () => {
+//     this.filtered = false;
+//   }
+
+  
+
+// let searchBar = () => {
+  toggleCheckbox = () => {
+      if (this.props.filtered==true) {
+        console.log('to off',this.props.filtered);
+        this.props.filterOff();
+      } else {
+        console.log('to on', this.props.filtered);
+        this.props.filterOn();
+      }
+
+    // if (this.selectedCheckboxes.has(label)) {
+    //   this.selectedCheckboxes.delete(label);
+    // } else {
+    //   this.selectedCheckboxes.add(label);
+    // }
+  }
 
   
 render() {
+  console.log('bar props.filtered',this.props.filtered);
+
+
   let addButton = () => {
     if(this.props.isAdmin){
     return <button className='btn btn-primary adminAdd' 
@@ -56,6 +87,7 @@ aria-haspopup="true" aria-expanded="false">Products <br />per Row <span classNam
 <li><a onClick={this.props.pprHandler} id='3'>3</a></li>
   <li><a onClick={this.props.pprHandler} id='4' >4</a></li>
   <li><a onClick={this.props.pprHandler} id='5'>5</a></li>
+  <li><a onClick={this.props.pprHandler} id='6'>6</a></li>
 </ul>
 </li>
 <li className="dropdown">
@@ -69,7 +101,13 @@ aria-haspopup="true" aria-expanded="false">color: <span className="caret"></span
   <li><a onClick={this.props.colorHandler} id='blue'>blue</a></li>
 </ul>
 </li>
-<li></li>
+<li className={(this.props.filtered)?'filtered checked':'filtered '} >
+<Checkbox
+      label='Filter On'
+      checked={this.props.filtered}
+      handleCheckboxChange={this.toggleCheckbox}
+      key='filtered'
+    /></li>
 <li >{addButton()}</li>
 </ul>
 

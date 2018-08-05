@@ -19,9 +19,12 @@ const rootReducer = combineReducers({
 const exampleInitialState = {
     products: {
         products: {},
+        filteredProducts: [],
         loading: false,
         editShow: false,
-        p_in: 0
+        showShow: false,
+        p_in: 0,
+        filtered: false
     },
     auth: { userId: 0,
         token: null,

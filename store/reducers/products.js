@@ -4,8 +4,11 @@ import { updateObject } from '../../shared/utility';
 const initialState = {
     loading: false,
     products: [],
+    filteredProducts: [],
+    filtered: false,
     product: [],
     editShow: false,
+    showShow: false,
     p_in: 0,
     productInfo: {}
 };
@@ -15,6 +18,13 @@ const editOpen = ( state, action ) => {
 };
 const editClose = ( state, action ) => {
     return updateObject( state, { editShow: false } );
+};
+
+const showOpen = ( state, action ) => {
+    return updateObject( state, { showShow: true, p_in: action.p_in } );
+};
+const showClose = ( state, action ) => {
+    return updateObject( state, { showShow: false } );
 };
 
 const addOpen = ( state, action ) => {
@@ -85,8 +95,25 @@ const fetchProductsSuccess = ( state, action ) => {
     } );
 };
 
+
+
 const fetchProductsFail = ( state, action ) => {
     return updateObject( state, { loading: false, error: action.error } );
+};
+
+const filterProductsArray = ( state, action ) => {
+    return updateObject( state, {
+        filteredProducts: action.filteredProducts,
+        filtered: true
+    } );
+};
+
+const filterOff = ( state, action ) => {
+    return updateObject( state, { filtered: false } );
+};
+
+const filterOn = ( state, action ) => {
+    return updateObject( state, { filtered: true } );
 };
 
 const reducer = ( state = initialState, action ) => {
@@ -106,7 +133,11 @@ const reducer = ( state = initialState, action ) => {
         case actionTypes.EDIT_PRODUCT_FAIL: return editProductfail( state, action );
         case actionTypes.ADD_OPEN: return addOpen(state, action);
         case actionTypes.ADD_CLOSE: return addClose(state, action);
-        case actionTypes.UPDATE_PRODUCTS_ARRAY: return updateProductsArray(state, action);
+        case actionTypes.FILTER_PRODUCTS_ARRAY: return filterProductsArray(state, action);
+        case actionTypes.FILTER_OFF: return filterOff(state, action);
+        case actionTypes.FILTER_ON: return filterOn(state, action);
+        case actionTypes.SHOW_OPEN: return showOpen(state, action);
+        case actionTypes.SHOW_CLOSE: return showClose(state, action);
 
         default: return state;
     }

@@ -6,6 +6,7 @@ import withErrorHandler from '../hoc/withErrorHandler/withErrorHandler';
 import * as actions from '../store/actions/index';
 import Spinner from './UI/spinner/spinner';
 import EditProductForm from './EditProductForm';
+import ShowProduct from './showProduct';
 import AddProductForm from './addProductForm';
 import Modal from './UI/Modal/Modal';
 import SearchBar from './filterBar.js';
@@ -13,6 +14,7 @@ import SearchBar from './filterBar.js';
 class Products extends Component {
     constructor(props) {
         super(props);
+        // this.changeFilter = this.changeFilter.bind(this);
     }
     state = {
         currentPage: 1, 
@@ -25,15 +27,24 @@ class Products extends Component {
         card_perscet: '20%',
         productColor: 'all'
     }
+
+    // wait(ms){
+    //     var start = new Date().getTime();
+    //     var end = start;
+    //     while(end < start + ms) {
+    //       end = new Date().getTime();
+    //    }
+    //  }
+
    handleClick = (event) => {
        this.setState({
            currentPage: Number(event.target.id)
        });
    }
 
-   handleDelete = (event) => {
+   handleDelete = (pid) => {
        //console.log('id: ',event.target.id);
-       this.props.onDeleteProduct(event.target.id);
+       this.props.onDeleteProduct(pid);
    }
    handleEdit = (p_in) => {
        //let pid = (event.target.id).slice(1);
@@ -47,29 +58,63 @@ class Products extends Component {
        this.props.onAddOpen();
    }
 
+   handleShow = (p_in) => {
+     this.setState({ p_in: p_in });
+     this.props.onShowOpen(p_in);
+   }
+
    colorHandler = (event) => {
-       let productColor = event.target.id;
-       console.log('productColor ', productColor);
+    console.log('this.state.productColor', this.state.productColor);
+    //console.log('event.target.id', event.target.id);
+    let productColor = (event)? event.target.id:this.state.productColor;
        let filteredProductArray = this.props.products;
 
        if (productColor === 'red') {
-           filteredProductArray = filteredProductArray.filter(product => product.productData.color !== 'red');
+           filteredProductArray = filteredProductArray.filter(product => product.productData.color === 'red');
        }
        if (productColor === 'orange') {
-           filteredProductArray = filteredProductArray.filter(product => product.productData.color !== 'orange')
+           filteredProductArray = filteredProductArray.filter(product => product.productData.color === 'orange')
        }
        if (productColor === 'blue') {
-           filteredProductArray = filteredProductArray.filter(product => product.productData.color !== 'blue')
+           filteredProductArray = filteredProductArray.filter(product => product.productData.color === 'blue')
        }
        if (productColor === 'yellow') {
-           filteredProductArray = filteredProductArray.filter(product => product.productData.color !== 'yellow')
+           filteredProductArray = filteredProductArray.filter(product => product.productData.color === 'yellow')
+       } else { };
+
+       this.setState({productColor: productColor}, 
+        ()=>console.log('colorHandler1', this.state.productColor));
+       // console.log('colorHandler2', this.state.productColor);
+       this.props.onFilterProductsArray(filteredProductArray);
+      // console.log('filteredProductArray', this.props.filteredProducts);
+       // filterd: true
+   }
+
+   UpdateFilterArray = (productsArray) => {
+    console.log('colorFilterUpdate.productColor', this.state.productColor);
+        let productColor = this.state.productColor;
+        let filteredProductArray = productsArray;
+
+       if (productColor === 'red') {
+           filteredProductArray = filteredProductArray.filter(product => product.productData.color === 'red');
        }
-       this.props.onUpdateProductsArray(filteredProductArray);
+       if (productColor === 'orange') {
+           filteredProductArray = filteredProductArray.filter(product => product.productData.color === 'orange')
+       }
+       if (productColor === 'blue') {
+           filteredProductArray = filteredProductArray.filter(product => product.productData.color === 'blue')
+       }
+       if (productColor === 'yellow') {
+           filteredProductArray = filteredProductArray.filter(product => product.productData.color === 'yellow')
+       } else { };
+
+       this.props.onFilterProductsArray(filteredProductArray);
+
    }
 
    pppHandler = (event) => {
        let ppp = event.target.id;
-       console.log('ppp', ppp);
+   //   console.log('ppp', ppp);
        this.setState({
            productsPerPage: ppp,
            currentPage: 1
@@ -78,7 +123,7 @@ class Products extends Component {
 
    pprHandler = (event) => {
     let ppr = event.target.id;
-    console.log('ppr', ppr);
+   // console.log('ppr', ppr);
     let card_perscet;
     if(ppr==='2'){
          card_perscet = '48%';}
@@ -87,14 +132,25 @@ class Products extends Component {
     else if(ppr==='4'){
         card_perscet = '23%';}
     else if(ppr==='5'){
-         card_perscet = '18%'; 
-    };
-console.log(card_perscet);
+        card_perscet = '18%';}
+    else if(ppr==='6'){
+        card_perscet = '14%';}     
+
+// console.log(card_perscet);
     this.setState({
        card_perscet : card_perscet,
         currentPage: 1
     });
 }
+
+changeFilter = () => {
+    if(this.props.filtered){
+    //    console.log('to off')
+         this.props.onFilterOff()}
+    else {//console.log('to on')
+        this.props.onFilterOn()}
+  }
+
 sortArray(p_arr) {
     p_arr = p_arr.sort((a, b) => {
         if (a.productData.product_name < b.productData.product_name) return -1;
@@ -105,23 +161,15 @@ sortArray(p_arr) {
 }
    // componentWillUpdate(nextProps, nextState){
         //componentDidUpdate(prevProps, prevState) {
-    componentWillMount(){
-       // this.props.onFetchProducts();
+    // componentWillMount(){
+    //    // this.props.onFetchProducts();
 
-    }        
-    componentWillReceiveProps(nextProps) {
-        //this.props.onFetchProducts();
-        // console.log('WillReceiveProps this.props.products',this.props.products);
-        // if(this.props.products.length == 0 || this.props.products.length > 0 && this.state.allProductsArr.length == 0){
-        //     this.props.onFetchProducts();
-        //     let sortedProductArray = this.sortArray(this.props.products)
-        // console.log('WillReceiveProps sortedProductArray',sortedProductArray);
-        //     this.setState({
-        //         allProductsArr: sortedProductArray,
-        //         editShow: this.props.editShow
-        //     });
-        // }
-        
+    // }        
+    componentWillReceiveProps(nextProps, nextState) {
+        if(this.props.filtered && nextProps.products !== this.props.products){
+            // make a new filteredProduct
+            this.UpdateFilterArray(nextProps.products);
+        }
     }
 
     // shouldComponentUpdate(nextProps, nextState, nextContext){
@@ -135,37 +183,24 @@ sortArray(p_arr) {
    
 
      componentDidMount() {
+         // AJAX CALL
          this.props.onFetchProducts();
-         // if(this.props.products.length == 0 || this.props.products.length > 0 && this.state.allProductsArr.length == 0){
-         // myVar = setTimeout(()=> this.setState({position: 1}), 3000)
-         if (this.props.products.length > 0) {
-             let sortedProductArray = this.sortArray(this.props.products)
-             console.log('componentDidMount sortedProductArray', sortedProductArray);
-             console.log('componentDidMount this.props.loading', this.props.loading);
-             this.setState({
-                 allProductsArr: sortedProductArray,
-                 editShow: this.props.editShow
-             });
-         } else {
-             console.log('componentDidMount this.props.products', this.props.products);
-             console.log('componentDidMount this.state.allProductsArr', this.state.allProductsArr);
-             console.log('props.product ==0');
-         }
+        //  console.log('DidMount this.props.products', this.props.products.length);
      }
-     componentDidUpdate(prevProps, prevState) {
-      //  this.props.onFetchProducts();
-     //   console.log('componentDidUpdate this.props.products',this.props.products);
-     //   console.log('componentDidUpdate this.state.allProductsArr',this.state.allProductsArr);
-     //   console.log('componentDidUpdate this.props.loading',this.props.loading);
-        
-        }
+    //   componenDidUpdate(prevProps, prevState) {
+    //     // console.log('DidUpdate this.props.filteredProducts=', 
+    //     //(this.props.filteredProducts)?this.props.filteredProducts.length:'empty');
+    //      }
 
     render () {
+        // console.log('render filtered:', this.props.filtered);
+        // console.log('render this.props.filteredProducts=', 
+       // (this.props.filteredProducts)?this.props.filteredProducts.length:'empty');
         let renderPageNumbers = '';
         let delButton = (p_id) => {
             if(this.props.isAdmin){
             return <button className='btn btn-danger' id={p_id} 
-                onClick={this.handleDelete}
+                onClick={() => this.handleDelete(p_id)} 
                 >Delete</button>;
             } else { return null}
         }
@@ -185,23 +220,31 @@ sortArray(p_arr) {
                 >Add a New Product</button>;
             } else { return null}
         }
-      
+        let currentProducts = null;
+        // console.log('render this.props.loading',this.props.loading);
         let products = <Spinner color="white"/>;
-        if ( !this.props.loading && this.state.allProductsArr.length > 0 ) {
-            const { currentPage, productsPerPage, allProductsArr } = this.state;
-            console.log('render allProductsArr=', allProductsArr);
-            console.log('render this.props.products',this.props.products);
-            // console.log('props',this.props.products)
-            const sortedProductArray = [...allProductsArr];
-            //const sortedProductArray = [...this.props.products];
+
+        if (!this.props.loading && 
+            (this.props.products.length > 0 || this.props.filteredProducts.length > 0)){    
+            const { currentPage, productsPerPage } = this.state;
+
+            let sortedProductArray = [];
+                if(this.props.filtered && this.state.productColor !== 'all'){
+                    //this.colorFilterUpdate();
+                   sortedProductArray = this.sortArray(this.props.filteredProducts);
+                }else {
+                   sortedProductArray = this.sortArray(this.props.products);
+                }
             const indexOfLastProduct = (sortedProductArray.length < productsPerPage)? sortedProductArray.length  : currentPage * productsPerPage;
             const indexOfFirstProduct = (sortedProductArray.length < productsPerPage)? 0 : indexOfLastProduct - productsPerPage;
-            const currentProducts = sortedProductArray.slice(indexOfFirstProduct, indexOfLastProduct);
+            currentProducts = sortedProductArray.slice(indexOfFirstProduct, indexOfLastProduct);
             
             products = currentProducts.map((product, index) => (
-             <div key={index}  className="card">
+             <div key={index}  className="card" >
+             <div onClick={() => this.handleShow(index)} >
                 <div className="product-img">
-                  <img src="../static/sarong1.png" 
+                  <img src={"../static/" + product.productData.photo_url} 
+                        onError={(e)=>{e.target.src="../static/sarong1.png"}}
                         className="media-object prd-img" />
                 </div>
                 <div className="product-info">
@@ -209,16 +252,18 @@ sortArray(p_arr) {
                   <span>Description: {product.productData.description}</span><br/>
                   <span>Color: {product.productData.color}</span><br/>
                   <span>photo_url: {product.productData.photo_url}</span><br/>
-                  <span className="product-price">Price: {product.productData.retail_price}</span><br/>
+                  <span className="product-price">Price: {product.productData.retail_price}</span><br/>            
+                </div>
+                </div>
+
                   {delButton(product.id)}
                   {editButton(index)}
-                </div>
               </div>
           ));
     
           // Logic for displaying page numbers
         const pageNumbers = [];
-        for (let i = 1; i <= Math.ceil(this.props.products.length / productsPerPage); i++) {
+        for (let i = 1; i <= Math.ceil(sortedProductArray.length / productsPerPage); i++) {
           pageNumbers.push(i);
         }
 
@@ -233,13 +278,20 @@ sortArray(p_arr) {
         } else { products = <Spinner color="red" />;}
         // a way to controll products per row
         const card_perscet = this.state.card_perscet;
-        console.log('rwnder ',card_perscet);
+        //console.log('render ',card_perscet);
+        // filteredProducts={(this.props.filteredProducts)?this.props.filteredProducts:null}
         return ( 
          <div>
+            <Modal name="showProductModal" show={this.props.showShow} modalClosed={this.props.onShowClose}>
+            <button className="btn btn-link" onClick={this.props.onShowClose}>X</button>
+                <ShowProduct pin={this.state.p_in}
+                    myproductInfo={(currentProducts)?currentProducts[this.state.p_in]:null} />
+            </Modal >
             <Modal name="editFormModal" show={this.props.editShow} modalClosed={this.props.onEditClose}>
             <button className="btn btn-link" onClick={this.props.onEditClose}>X</button>
                 <EditProductForm pin={this.state.p_in}
-                    myproductInfo={this.props.products[this.state.p_in]} />
+                    myproductInfo={(currentProducts)?currentProducts[this.state.p_in]:null}
+                     />
             </Modal >
             <Modal name="addFormModal" show={this.props.addShow} modalClosed={this.props.onAddClose}>
             <button className="btn btn-link" onClick={this.props.onAddClose}>X</button>
@@ -247,10 +299,14 @@ sortArray(p_arr) {
             </Modal >
             <div className="mainbody">
             <SearchBar handleAdd={this.handleAdd}
-                colorHandler={this.colorHandler}
+                colorHandler={this.colorHandler.bind(this)}
                 pppHandler = {this.pppHandler}
                 pprHandler={this.pprHandler}
                 isAdmin={this.props.isAdmin}
+                filtered={this.props.filtered}
+                filterOff={this.props.onFilterOff}
+                filterOn={this.props.onFilterOn}
+
              />
         {/*searchBar()*/}
             <div className="cards">
@@ -302,8 +358,8 @@ sortArray(p_arr) {
                 width: ${card_perscet};
                 border: 1px solid brown;
                 border-radius: 20px;
-                margin: 10px;
-                padding:15px;
+                margin: 1%;
+                padding: 1%;
                 background-color: beige;
             }
             .pagination>li.mypage-item{
@@ -342,12 +398,15 @@ const mapStateToProps = state => {
     return {
         products: state.products.products,
         loading: state.products.loading,
+        filteredProducts: state.products.filteredProducts,
     //    token: state.auth.token,
     //    userId: state.auth.userId,
         isAdmin: state.auth.isAdmin,
         editShow: state.products.editShow,
         addShow: state.products.addShow,
-        p_in: state.products.p_in
+        showShow: state.products.showShow,
+        p_in: state.products.p_in,
+        filtered: state.products.filtered
     };
 };
 
@@ -359,7 +418,11 @@ const mapDispatchToProps = dispatch => {
         onEditClose: () => dispatch( actions.editClose()),
         onAddOpen: () => dispatch( actions.addOpen()),
         onAddClose: () => dispatch( actions.addClose()),
-        onUpdateProductsArray: () => dispatch(actions.updateProductsArray())
+        onShowOpen: () => dispatch( actions.showOpen()),
+        onShowClose: () => dispatch( actions.showClose()),
+        onFilterProductsArray: (products) => dispatch(actions.filterProductsArray(products)),
+        onFilterOn: () => dispatch( actions.filterOn()),
+        onFilterOff: () => dispatch( actions.filterOff())
     };
 };
 

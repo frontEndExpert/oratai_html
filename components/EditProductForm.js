@@ -79,6 +79,7 @@ class EditProductForm extends Component {
             if(this.state.productInfo !== nextProps.myproductInfo.productData){
         //  console.log('Edit WillReceive nextProps.myproductInfo' + JSON.stringify(nextProps.myproductInfo.productData));
         //  console.log('Edit WillReceive nextProps.pin' + nextProps.pin);
+
             this.setState({
                 productInfo: {...nextProps.myproductInfo.productData},
                 productData: {...nextProps.myproductInfo.productData},
@@ -99,6 +100,14 @@ class EditProductForm extends Component {
         };
     };
 
+    // wait(ms){
+    //     var start = new Date().getTime();
+    //     var end = start;
+    //     while(end < start + ms) {
+    //       end = new Date().getTime();
+    //    }
+    //  }
+
     productHandler = ( event ) => {
         event.preventDefault();
         const formData = {};
@@ -111,7 +120,6 @@ class EditProductForm extends Component {
         console.log('productHandler-this.props.myproductInfo.productData', this.props.myproductInfo.productData);
         console.log('productHandler-this.props.myproductInfo.id', this.props.myproductInfo.id);
         this.props.onEditProduct(this.props.myproductInfo.id,this.state.productData); 
-        
     };
 
     
@@ -149,9 +157,7 @@ class EditProductForm extends Component {
     
 
     render () {
-        // console.log('Edit render props.myproductInfo' + this.props.myproductInfo);
-        // console.log('Edit render state.productForm' + JSON.stringify(this.state.productForm));
-        // updateObject(this.state, {
+        // updateObject(this.state, {JSON.stringify
         //     productInfo: {...this.props.myproductInfo},
         //     p_in: this.props.pin
         // });
@@ -169,15 +175,17 @@ class EditProductForm extends Component {
         let form = (
             <form className="pro-form" style={{color: 'black'}} onSubmit={this.productHandler}>
                 {formElementsArray.map(formElement => (
-                    <Input 
-                        key={formElement.id}
-                        elementType={formElement.config.elementType}
-                        elementConfig={formElement.config.elementConfig}
-                        value={formElement.config.value}
-                        invalid={!formElement.config.valid}
-                        shouldValidate={formElement.config.validation}
-                        touched={formElement.config.touched}
-                        changed={(event) => this.inputChangedHandler(event.target.value, formElement.id)} />
+                    <div key={formElement.id} width="330px">
+                        <Input width="230px"
+                            label={formElement.config.elementConfig.placeholder}
+                            elementType={formElement.config.elementType}
+                            elementConfig={formElement.config.elementConfig}
+                            value={formElement.config.value}
+                            invalid={!formElement.config.valid}
+                            shouldValidate={formElement.config.validation}
+                            touched={formElement.config.touched}
+                            changed={(event) => this.inputChangedHandler(event.target.value, formElement.id)} />
+                    </div>
                 ))}
                 <Button type='submit' btnType='Success' 
                 disabled={!this.state.formIsValid}>Save Changes</Button>
@@ -192,15 +200,18 @@ class EditProductForm extends Component {
             form = <p key="errMsg">Only Admin Can Edit Products!</p>
         }
 
+        // <p>this.state.productData: {JSON.stringify(this.state.productData)}</p>
+        // <p>this.props.myproductInfo: {JSON.stringify(this.props.myproductInfo)}</p>
         return (
             <div className='ProductData'>
                 <h4>Edit Product Here</h4>
                 <div >
-                    <p>this.state.productData: {JSON.stringify(this.state.productData)}</p>
-                    <p>this.props.myproductInfo: {JSON.stringify(this.props.myproductInfo)}</p>
                 {form}
                 </div>
             <style jsx >{`
+            label{
+                color: black;
+            }
             .pro-form {
                 color: black;
             }

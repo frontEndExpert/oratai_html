@@ -73,12 +73,12 @@ class Nav extends Component {
           </li>
           <li>
           <Link href='/products' >
-            <a >Products</a>
+            <a className={this.pathname === '/products' ? 'active' : ''}>Products</a>
           </Link>  
           </li>
           <li>
           <Link href='/contactus'>
-            <a  >Contact Us</a>
+            <a  className={this.pathname === '/contactus' ? 'active' : ''}>Contact Us</a>
           </Link> 
           </li>
       </ul>

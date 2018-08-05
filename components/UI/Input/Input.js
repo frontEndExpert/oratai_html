@@ -59,8 +59,10 @@ const input = ( props ) => {
             
             .Label {
                 font-weight: bold;
-                display: block;
-                margin-bottom: 8px;
+                display: inline-block;
+                width: 130px;
+                margin: 8px;
+                text-align: left;
             }
             
             .InputElement {

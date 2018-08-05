@@ -13,7 +13,11 @@ export {
     editProductSuccess,
     addOpen,
     addClose,
-    updateProductsArray
+    filterProductsArray,
+    filterOff,
+    filterOn,
+    showOpen,
+    showClose
 } from './products';
 export {
     authOpen,

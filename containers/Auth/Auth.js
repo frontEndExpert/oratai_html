@@ -92,6 +92,7 @@ class Auth extends Component {
                 key={formElement.id}
                 elementType={formElement.config.elementType}
                 elementConfig={formElement.config.elementConfig}
+                label={formElement.config.elementConfig.placeholder}
                 value={formElement.config.value}
                 invalid={!formElement.config.valid}
                 shouldValidate={formElement.config.validation}

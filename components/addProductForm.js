@@ -9,9 +9,9 @@ import withErrorHandler from '../hoc/withErrorHandler/withErrorHandler'
 import * as actions from '../store/actions/index';
 import { updateObject, checkValidity } from '../shared/utility';
 
+
 class AddProductForm extends Component {
-    
-    state = {
+    initialState = {
         productForm: {
             product_name: {
                 elementType: 'input',
@@ -74,22 +74,15 @@ class AddProductForm extends Component {
         productId: 0
     };
 
+    state = {...this.initialState}
+
     componentWillReceiveProps = (nextProps) => {
         //console.log('componentWillReceiveProps')
         if(this.props.productAdded !== nextProps.productAdded){
             this.setState({productAdded: nextProps.productAdded})
         }
-         // if(nextProps.productAdded) {Router.push('/products');}
-       // console.log('componentWillReceiveProps', this.state.productAdded)
     };
 
-    //componentWillUpdate 
-    // componentDidMount = () => {
-    //     if (this.props.token !== null){
-    //         console.log("addProduct onGetisAdmin");
-    //         this.props.onGetisAdmin(); 
-    //     };
-    // };
 
     productHandler = ( event ) => {
         event.preventDefault();
@@ -104,6 +97,8 @@ class AddProductForm extends Component {
         this.setState({productData: formData});
         this.props.onAddProduct(product); 
         
+        this.state = {...this.initialState};
+        //form.reset();
     };
 
    
@@ -125,6 +120,31 @@ class AddProductForm extends Component {
         this.setState({productForm: updatedProductForm, formIsValid: formIsValid});
     };
 
+    uploadFile = (event) => {
+        console.log(event);
+        let file = event.target.files[0];
+        console.log(file.name);
+        if (file) {
+           // updateObject(this.state.productForm.photo_url, {value:file.name})
+            const updatedFileName = updateObject(this.state.productForm.photo_url, {
+                value: file.name,
+                valid: true,
+                touched: true
+            });
+            const updatedProductForm = updateObject(this.state.productForm, {
+                photo_url: updatedFileName})
+            let formIsValid = true;
+            for (let inputIdentifier in updatedProductForm) {
+                formIsValid = updatedProductForm[inputIdentifier].valid && formIsValid;
+            }    
+            this.setState({productForm: updatedProductForm,formIsValid: formIsValid});
+         // let data = new FormData();
+         // data.append('file', file);
+          // axios.post('/files', data)...
+        }
+    }
+
+
     render () {
         const formElementsArray = [];
         for (let key in this.state.productForm) {
@@ -139,6 +159,7 @@ class AddProductForm extends Component {
                 {formElementsArray.map(formElement => (
                     <Input 
                         key={formElement.id}
+                        label={formElement.config.elementConfig.placeholder}
                         elementType={formElement.config.elementType}
                         elementConfig={formElement.config.elementConfig}
                         value={formElement.config.value}
@@ -147,6 +168,8 @@ class AddProductForm extends Component {
                         touched={formElement.config.touched}
                         changed={(event) => this.inputChangedHandler(event, formElement.id)} />
                 ))}
+                
+                <input type="file"  name="myFile" onChange={this.uploadFile} />
                 <Button type='submit' btnType='Success' 
                 disabled={!this.state.formIsValid}>Add This Product</Button>
             </form>

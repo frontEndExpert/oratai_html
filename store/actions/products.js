@@ -25,7 +25,8 @@ export const addProductSuccess = ( id, productData ) => {
         type: actionTypes.ADD_PRODUCT_SUCCESS,
         productId: id,
         product: productData,
-        productAdded: true
+        productAdded: true,
+        loading: false
     };
 };
 //productData, token
@@ -156,10 +157,40 @@ export const editClose = () => {
     };
 };
 
-export const updateProductsArray = (p_arr) => {
+export const showOpen = (pIn) => {
     return {
-        type: actionTypes.UPDATE_PRODUCTS_ARRAY,
-        products: p_arr
+        type: actionTypes.SHOW_OPEN,
+        showShow: true,
+        p_in: pIn
+    };
+};
+
+export const showClose = () => {
+    return {
+        type: actionTypes.SHOW_CLOSE,
+        showShow: false
+    };
+};
+
+export const filterProductsArray = (filteredProducts) => {
+
+    return {
+        type: actionTypes.FILTER_PRODUCTS_ARRAY,
+        filteredProducts: [...filteredProducts],
+        filtered: true
+    };
+};
+
+export const filterOff = () => {
+    return {
+        type: actionTypes.FILTER_OFF,
+        filtered: false
+    };
+};
+export const filterOn = () => {
+    return {
+        type: actionTypes.FILTER_ON,
+        filtered: true
     };
 };
 
@@ -191,9 +222,9 @@ export const editProduct = (id, productData ) => {
       //  ?auth=' + token + token,  rest/saving-data/products.json
          axios.put( '/products/'+ id +'/productData.json', productData )
             .then( response => {
-                console.log('action Editproduct Success');
+                // console.log('action Editproduct Success');
                 dispatch( editProductSuccess( ) );
-              
+                //dispatch(filterProductsArray( ) );
                 dispatch( editClose());
                 dispatch(fetchProducts());
             } )

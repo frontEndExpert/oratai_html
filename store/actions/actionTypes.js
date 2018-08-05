@@ -31,10 +31,14 @@ export const EDIT_PRODUCT_START = 'EDIT_PRODUCT_START';
 export const EDIT_PRODUCT_FAIL = 'EDIT_PRODUCT_FAIL';
 export const EDIT_PRODUCT_SUCCESS = 'EDIT_PRODUCT_SUCCESS';
 
-export const UPDATE_PRODUCTS_ARRAY = 'UPDATE_PRODUCTS_ARRAY';
+export const FILTER_PRODUCTS_ARRAY = 'FILTER_PRODUCTS_ARRAY';
+export const FILTER_OFF = 'FILTER_OFF';
+export const FILTER_ON = 'FILTER_ON';
 
 export const EDIT_OPEN = 'EDIT_OPEN';
 export const EDIT_CLOSE = 'EDIT_CLOSE';
+export const SHOW_OPEN = 'SHOW_OPEN';
+export const SHOW_CLOSE = 'SHOW_CLOSE';
 export const ADD_OPEN = 'ADD_OPEN';
 export const ADD_CLOSE = 'ADD_CLOSE';
 export const GET_ISADMIN = 'GET_ISADMIN';

@@ -1,16 +1,13 @@
 import React from "react";
 
-
-
-
 //class Header extends Component {
- 
 //  export default ({ pathname })  => (
 // background-image: url('../static/orataiphathai_bg1.jpg');
 const Header = () => (
   <header >
   <div className='header'>
-    <img src='../static/orataiphathai_bg.jpg' width='1600' height='270' className='img-responsive myimg' />
+    <img src='../static/orataiphathai_bg.jpg' 
+    width="100%" height="100%" className='img-responsive myimg' />
   </div>
    <style jsx>{`
   @media (min-width: 601px) {
