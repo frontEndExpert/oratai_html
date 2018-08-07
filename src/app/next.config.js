@@ -1,4 +1,4 @@
-module.exports = {
+/* module.exports = {
   webpack: (config) => {
     // Fixes npm packages that depend on `fs` module
     config.node = {
@@ -7,4 +7,10 @@ module.exports = {
 
     return config
   }
+} */
+
+// src/app/next.config.js
+
+module.exports = {
+  distDir: "../functions/next"
 }

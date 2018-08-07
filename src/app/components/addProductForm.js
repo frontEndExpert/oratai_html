@@ -26,6 +26,19 @@ class AddProductForm extends Component {
                 valid: false,
                 touched: false
             },
+            description: {
+                elementType: 'text',
+                elementConfig: {
+                    type: 'text',
+                    placeholder: 'Description'
+                },
+                value: '',
+                validation: {
+                    required: true
+                },
+                valid: false,
+                touched: false
+            },
             color: {
                 elementType: 'input',
                 elementConfig: {

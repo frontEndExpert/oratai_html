@@ -1,5 +1,5 @@
 {
-  "name": "oratai-next-app",
+  "name": "oratai-next-firebase-app",
   "scripts": {
     "dev": "next",
     "build": "next build",

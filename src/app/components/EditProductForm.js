@@ -11,7 +11,7 @@ import { updateObject, checkValidity } from '../shared/utility';
 
 class EditProductForm extends Component {
 
-    state = {
+    initialState = {
         productForm: {
             product_name: {
                 elementType: 'input',
@@ -25,6 +25,19 @@ class EditProductForm extends Component {
                 },
                 valid: true,
                 touched: true
+            },
+            description: {
+                elementType: 'input',
+                elementConfig: {
+                    type: 'text',
+                    placeholder: 'Description'
+                },
+                value: '',
+                validation: {
+                    required: true
+                },
+                valid: false,
+                touched: false
             },
             color: {
                 elementType: 'input',
@@ -74,19 +87,16 @@ class EditProductForm extends Component {
         p_in: this.props.pin
     };
     
-    componentWillReceiveProps(nextProps) {
+    state = {...this.initialState}
+
+   componentWillReceiveProps(nextProps) {
         if(nextProps.myproductInfo){
             if(this.state.productInfo !== nextProps.myproductInfo.productData){
         //  console.log('Edit WillReceive nextProps.myproductInfo' + JSON.stringify(nextProps.myproductInfo.productData));
-        //  console.log('Edit WillReceive nextProps.pin' + nextProps.pin);
-
-            this.setState({
-                productInfo: {...nextProps.myproductInfo.productData},
-                productData: {...nextProps.myproductInfo.productData},
-                p_in: nextProps.pin
-            });
-            this.state.productForm.color.value = nextProps.myproductInfo.productData.color; 
+            
             this.state.productForm.product_name.value = nextProps.myproductInfo.productData.product_name; 
+            this.state.productForm.description.value = nextProps.myproductInfo.productData.description; 
+            this.state.productForm.color.value = nextProps.myproductInfo.productData.color; 
             this.state.productForm.photo_url.value = nextProps.myproductInfo.productData.photo_url; 
             this.state.productForm.retail_price.value = nextProps.myproductInfo.productData.retail_price; 
         // console.log('Edit WillReceive state.productInfo' + JSON.stringify(this.state.productInfo));     
@@ -95,9 +105,16 @@ class EditProductForm extends Component {
 }
 
     componentDidMount = () => {
-        if (this.props.token !== null){
-            this.props.onGetisAdmin(); 
+        if (this.props.token !== null) {
+            this.props.onGetisAdmin();
         };
+        if(this.props.myproductInfo){
+            this.setState({
+                productInfo: {...this.props.myproductInfo.productData},
+                productData: {...this.props.myproductInfo.productData},
+                p_in: this.props.pin
+            });
+        }
     };
 
     // wait(ms){
@@ -108,10 +125,31 @@ class EditProductForm extends Component {
     //    }
     //  }
 
+    uploadFile = (event) => {
+        console.log(event);
+        let file = event.target.files[0];
+        console.log(file.name);
+        if (file) {
+            const updatedFileName = updateObject(this.state.productForm.photo_url, {
+                value: file.name,
+                valid: true,
+                touched: true
+            });
+            const updatedProductForm = updateObject(this.state.productForm, {
+                photo_url: updatedFileName})
+            let formIsValid = true;
+            for (let inputIdentifier in updatedProductForm) {
+                formIsValid = updatedProductForm[inputIdentifier].valid && formIsValid;
+            }    
+            this.setState({productForm: updatedProductForm,formIsValid: formIsValid});
+         // let data = new FormData(); data.append('file', file); axios.post('/files', data)...
+        }
+    }
+
     productHandler = ( event ) => {
         event.preventDefault();
         const formData = {};
-        console.log('productHandler-this.state.productForm ',this.state.productForm);
+        //console.log('productHandler-this.state.productForm ',this.state.productForm);
         for (let formElementIdentifier in this.state.productForm) {
             formData[formElementIdentifier] = this.state.productForm[formElementIdentifier].value;
         }
@@ -155,7 +193,6 @@ class EditProductForm extends Component {
     }
     
     
-
     render () {
         // updateObject(this.state, {JSON.stringify
         //     productInfo: {...this.props.myproductInfo},
@@ -187,6 +224,7 @@ class EditProductForm extends Component {
                             changed={(event) => this.inputChangedHandler(event.target.value, formElement.id)} />
                     </div>
                 ))}
+                <input type="file"  name="myFile" onChange={this.uploadFile} />
                 <Button type='submit' btnType='Success' 
                 disabled={!this.state.formIsValid}>Save Changes</Button>
             </form>
