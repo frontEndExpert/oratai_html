@@ -11,11 +11,23 @@
   },
   "dependencies": {
     "firebase-admin": "~5.13.0",
-    "firebase-functions": "^2.0.0"
+    "firebase-functions": "^2.0.0",
+    "lost": "8.2.0",
+      "axios": "^0.18.0",
+      "next": "6.0.3",
+      "react": "16.4.0",
+      "react-dom": "16.4.0",
+      "react-dev-utils": "^4.0.1",
+      "react-redux": "^5.0.6",
+      "react-router-dom": "^4.2.2",
+      "react-test-renderer": "^16.0.0",
+      "redux": "^3.7.2",
+      "redux-thunk": "^2.2.0"
   },
   "devDependencies": {
     "eslint": "^4.12.0",
-    "eslint-plugin-promise": "^3.6.0"
+    "eslint-plugin-promise": "^3.6.0",
+    "redux-devtools-extension": "^2.13.2"
   },
   "private": true
 }
