@@ -11,9 +11,9 @@
     "serve": "firebase serve",
     "predeploy": "npm build-all",
     "deploy": "firebase deploy",
-    "build-all": "npm build-next && npm build-firebase",
-    "build-next": "cd \"src/app\" && npm && npm build",
-    "build-firebase": "cd \"src/functions\" && npm"
+    "build-all": "npm run build-next && npm run build-firebase",
+    "build-next": "cd \"src/app\" && npm && npm run build",
+    "build-firebase": "cd \"src/functions\" && npm install"
   },
   "dependencies": {
     "lost": "8.2.0",
