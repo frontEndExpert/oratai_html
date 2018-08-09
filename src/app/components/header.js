@@ -1,8 +1,6 @@
 import React from "react";
 
-//class Header extends Component {
-//  export default ({ pathname })  => (
-// background-image: url('../static/orataiphathai_bg1.jpg');
+
 const Header = () => (
   <header >
   <div className='header'>

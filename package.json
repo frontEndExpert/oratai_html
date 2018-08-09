@@ -5,15 +5,15 @@
     "dev": "next",
     "build": "next build",
     "start": "next start",
-    "install": "npm build-all",
-    "next": "npm build-firebase && cd \"src/app\" && npm && npm dev",
-    "preserve": "npm build-all",
+    "install": "yarn build-all",
+    "next": "yarn build-firebase && cd \"src/app\" && yarn && yarn dev",
+    "preserve": "yarn build-all",
     "serve": "firebase serve",
-    "predeploy": "npm build-all",
+    "predeploy": "yarn build-all",
     "deploy": "firebase deploy",
-    "build-all": "npm run build-next && npm run build-firebase",
-    "build-next": "cd \"src/app\" && npm && npm run build",
-    "build-firebase": "cd \"src/functions\" && npm install"
+    "build-all": "yarn build-next && yarn build-firebase",
+    "build-next": "cd \"src/app\" && yarn && yarn build",
+    "build-firebase": "cd \"src/functions\" && yarn"
   },
   "dependencies": {
     "lost": "8.2.0",

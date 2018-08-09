@@ -1,24 +1,34 @@
-/* {
-  "functions": {
-    "predeploy": [
-      "npm --prefix \"$RESOURCE_DIR\" run lint"
-    ]
-  },
-  "hosting": {
-    "public": "src/public",
-    "ignore": [
-      "firebase.json",
-      "** /.*",
-      "** /node_modules/**"
-    ]
-  }
-} */
+// {
+//   "hosting": {
+//     "public": "src/public"
+//   },
+//   "functions": {
+//     "source": "src/functions"
+//   }
+// }
 
 {
   "hosting": {
-    "public": "src/public"
+    "public": "src/public",
+    "rewrites": [
+      {
+        "source": "**/**",
+        "function": "next"
+      }
+    ]
   },
   "functions": {
     "source": "src/functions"
   }
 }
+// {
+//   "hosting": {
+//     "public": "build",
+//     "rewrites": [
+//       {
+//         "source": "**",
+//         "function": "app"
+//       }
+//     ]
+//   }
+// }

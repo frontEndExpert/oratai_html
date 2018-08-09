@@ -13,6 +13,12 @@
     <script defer src="/__/firebase/5.3.1/firebase-messaging.js"></script>
     <script defer src="/__/firebase/5.3.1/firebase-storage.js"></script>
     <!-- initialize the SDK after all desired features are loaded -->
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" />
+
+
     <script defer src="/__/firebase/init.js"></script>
 
     <style media="screen">
@@ -29,17 +35,16 @@
         body { border-top: 16px solid #ffa100; }
       }
     </style>
+
+<script src="/environments/environment.js"></script>
+<script>
+  firebase.initializeApp(environment.firebase);
+</script>
   </head>
   <body>
-    <div id="message">
-      <h2>Welcome</h2>
-      <h1>Firebase Hosting Setup Complete</h1>
-      <p>You're seeing this because you've successfully setup Firebase Hosting. Now it's time to go build something extraordinary!</p>
-      <a target="_blank" href="https://firebase.google.com/docs/hosting/">Open Hosting Documentation</a>
-    </div>
     <p id="load">Firebase SDK Loading&hellip;</p>
 
-    <script>
+    <!--script>
       document.addEventListener('DOMContentLoaded', function() {
         // // 🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥
         // // The Firebase SDK is initialized and available here!
@@ -60,6 +65,10 @@
           document.getElementById('load').innerHTML = 'Error loading the Firebase SDK, check the console.';
         }
       });
-    </script>
+    </script-->
+    <noscript>
+      You need to enable JavaScript to run this app.
+    </noscript>
+    <div id="root" class="mdc-typography"></div>
   </body>
 </html>

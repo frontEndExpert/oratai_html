@@ -63,7 +63,7 @@ render() {
 <div className="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
 <ul className="nav navbar-nav">
 <li className="dropdown">
-<a href="#" className="dropdown-toggle" data-toggle="dropdown" 
+<a href="" className="dropdown-toggle" data-toggle="dropdown" 
 role="button" aria-haspopup="true" aria-expanded="false">
 Products <br/>per Page <span className="caret"></span></a>
 <ul className="dropdown-menu">
@@ -80,7 +80,7 @@ Products <br/>per Page <span className="caret"></span></a>
 </ul>
 </li>
 <li className="dropdown">
-<a href="#" className="dropdown-toggle" data-toggle="dropdown" role="button" 
+<a href="" className="dropdown-toggle" data-toggle="dropdown" role="button" 
 aria-haspopup="true" aria-expanded="false">Products <br />per Row <span className="caret"></span></a>
 <ul className="dropdown-menu">
 <li><a onClick={this.props.pprHandler} id='2'>2</a></li>
@@ -91,7 +91,7 @@ aria-haspopup="true" aria-expanded="false">Products <br />per Row <span classNam
 </ul>
 </li>
 <li className="dropdown">
-<a href="#" className="dropdown-toggle" data-toggle="dropdown" role="button" 
+<a href="" className="dropdown-toggle" data-toggle="dropdown" role="button" 
 aria-haspopup="true" aria-expanded="false">color: <span className="caret"></span></a>
 <ul className="dropdown-menu">
 <li><a onClick={this.props.colorHandler} id='all'>all colors</a></li>
