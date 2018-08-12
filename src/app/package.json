@@ -19,6 +19,11 @@
     "redux-thunk": "^2.2.0" 
   },
   "devDependencies": {
-    "redux-devtools-extension": "^2.13.2"
+    "redux-devtools-extension": "^2.13.2",
+    "@babel/cli": "^7.0.0-beta.42",
+    "@babel/core": "^7.0.0-beta.42",
+    "@babel/runtime": "^7.0.0-beta.42",
+    "@babel/preset-env": "^7.0.0-beta.42",
+    "firebase-tools": "^3.18.6"
   }
 }

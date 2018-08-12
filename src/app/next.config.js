@@ -12,5 +12,6 @@
 // src/app/next.config.js
 
 module.exports = {
-  distDir: "../functions/next"
+  //distDir: "../functions/next"
+  distDir: "../../dist/functions/next"
 }

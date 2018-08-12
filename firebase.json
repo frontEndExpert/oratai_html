@@ -1,6 +1,13 @@
+
 // {
 //   "hosting": {
-//     "public": "src/public"
+//     "public": "src/public",
+//     "rewrites": [
+//       {
+//         "source": "**/**",
+//         "function": "next"
+//       }
+//     ]
 //   },
 //   "functions": {
 //     "source": "src/functions"
@@ -9,26 +16,18 @@
 
 {
   "hosting": {
-    "public": "src/public",
+    "public": "dist/public",
     "rewrites": [
       {
         "source": "**/**",
-        "function": "next"
+        "function": "app-next"
       }
-    ]
+    ],
+    "predeploy": "yarn build-public"
   },
   "functions": {
-    "source": "src/functions"
+    "source": "dist/functions",
+    "predeploy":
+      "yarn build-funcs && yarn build-app && yarn copy-deps"
   }
 }
-// {
-//   "hosting": {
-//     "public": "build",
-//     "rewrites": [
-//       {
-//         "source": "**",
-//         "function": "app"
-//       }
-//     ]
-//   }
-// }
