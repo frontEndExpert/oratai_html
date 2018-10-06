@@ -20,7 +20,7 @@
     "rewrites": [
       {
         "source": "**/**",
-        "function": "app-next"
+        "function": "next"
       }
     ],
     "predeploy": "yarn build-public"
